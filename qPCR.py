@@ -340,12 +340,12 @@ def qPCR_plot(sort_by="target_asc", break_thold=10, s_multi_t = 30, title="qPCR"
                         if text_x < lower_break[s_names[i]]:
                             # Add text label to bar in "ax1"
                             # Set space between upper cap of error bar and text as 1/20 of the width in "ax1"
-                            ax1.text(text_x + lower_break[s_names[i]] / 20, pos[j], text_s)
+                            ax1.text(text_x + lower_break[s_names[i]] / 20, pos[j] + width / 8, text_s)
                         # If break exists ...
                         else:
                             # Add text label to bar in "ax2"
                             # Set space between upper cap of error bar and text as 1/20 of the width in "ax2"
-                            ax2.text(text_x + (upper_limit[s_names[i]] - upper_break[s_names[i]]) /20, pos[j], text_s)
+                            ax2.text(text_x + (upper_limit[s_names[i]] - upper_break[s_names[i]]) /20, pos[j] + width / 8, text_s)
 
                 # Determine legend for plots of different sample names
                 s_plots_legend.append(bp)
@@ -371,7 +371,7 @@ def qPCR_plot(sort_by="target_asc", break_thold=10, s_multi_t = 30, title="qPCR"
             ax1.set_yticklabels(list(s_df["Ctrl"]["Target Name"]))
 
             # Set title of bar graph
-            ax1.set_title(title)
+            ax2.set_title(title)
 
             # Set legend of bar graph
             ax2.legend(s_plots_legend, s_names[::-1], loc=legend_loc) 
@@ -391,6 +391,74 @@ def qPCR_plot(sort_by="target_asc", break_thold=10, s_multi_t = 30, title="qPCR"
             ax2.plot((-d, +d), (1-d, 1+d), **kwargs)      # Top-right diagonal
             ax2.plot((-d, +d), (-d, +d), **kwargs)        # Bottom-right diagonal
             
+            # Show the bar graph
+            plt.show()
+
+            # Save bar graph
+            fig.savefig(f'./figures/{title}_sortby-{sort_by.split("_")[0]}.{sort_by.split("_")[1]}_orien-{orien}.png', \
+                bbox_inches="tight")
+
+        # No break in horizontal bar graph
+        else:
+
+            # Bar plots
+            fig, ax = plt.subplots(figsize=[total_bars / 7.5, total_bars / 3], dpi=100)
+
+            # Counter for offside width for "pos"
+            counter = 0
+
+            # Loop through "s_names" in reverse order
+            for i in range(len(s_names))[::-1]:
+
+                # List for "self" parameter of bar plot
+                pos = []
+                [pos.append(ele + width * (counter + 1)) for ele in basic_pos]
+
+                # Add 1 to "counter"
+                counter += 1
+            
+                # Determine bar plots for different sample names
+                bp = ax.barh(pos, s_df[s_names[i]]["Rel. Avg. Tx/Ctrl"], width, xerr=s_df[s_names[i]]["Stdev"], \
+                    align="edge", alpha=alpha, ecolor=ecolor, capsize=capsize)
+
+                # Add asterisk(s) for bars of treatment group(s) if applicable
+                if s_names[i] != "Ctrl":
+
+                    # Loop through "s_df" of iterated sample name
+                    for j in range(len(s_df[s_names[i]])):
+
+                        # Asterisk(s) for "s" parameter of "Axes.text()"
+                        text_s = s_df[s_names[i]]["P"][j]
+
+                        # x-coord for upper cap of iterated error bar
+                        text_x = s_df[s_names[i]]["Rel. Avg. Tx/Ctrl"][j] + s_df[s_names[i]]["Stdev"][j]
+
+                        # Add text label to bar in "ax1"
+                        # Set space between upper cap of error bar and text as 1/20 of the width in "ax1"
+                        ax.text(text_x + upper_limit[s_names[i]] / 40, pos[j] + width / 8, text_s)
+
+                # Determine legend for plots of different sample names
+                s_plots_legend.append(bp)
+
+            # Set limit on axis of value
+            ax.set_xlim(0, ul)
+            # Set limit on axis of target names
+            ax.set_ylim(0, len(s_df["Ctrl"]) + width) 
+
+            # Set ticks, ticklables, and lables on axis of value
+            ax.tick_params(axis="x", labeltop="on", top=True)
+            ax.set_xlabel(value_label)
+
+            # Set ticks and ticklabels on axis of target names
+            ax.set_yticks(value_ticks)
+            ax.set_yticklabels(list(s_df["Ctrl"]["Target Name"]))
+
+            # Set title of bar graph
+            ax.set_title(title)
+
+            # Set legend of bar graph
+            ax.legend(s_plots_legend, s_names[::-1], loc=legend_loc) 
+          
             # Show the bar graph
             plt.show()
 
@@ -444,12 +512,13 @@ def qPCR_plot(sort_by="target_asc", break_thold=10, s_multi_t = 30, title="qPCR"
                         if text_y < lower_break[s_names[i]]:
                             # Add text label to bar in "ax2"
                             # Set space between upper cap of error bar and text as 1/20 of the width in "ax2"
-                            ax2.text(pos[j], text_y + lower_break[s_names[i]] / 20, text_s)
+                            ax2.text(pos[j] + width / 2, text_y + lower_break[s_names[i]] / 20, text_s, horizontalalignment='center')
                         # If break exists ...
                         else:
                             # Add text label to bar in "ax1"
                             # Set space between upper cap of error bar and text as 1/20 of the width in "ax1"
-                            ax1.text(pos[j], text_y + (upper_limit[s_names[i]] - upper_break[s_names[i]]) /20, text_s)
+                            ax1.text(pos[j] + width / 2, text_y + (upper_limit[s_names[i]] - upper_break[s_names[i]]) /20, text_s, \
+                                horizontalalignment='center')
 
                 # Determine legend for plots of different sample names
                 s_plots_legend.append(bp)
@@ -464,9 +533,7 @@ def qPCR_plot(sort_by="target_asc", break_thold=10, s_multi_t = 30, title="qPCR"
             # Set limit on axis of target names
             ax2.set_xlim(0, len(s_df["Ctrl"]) + width) 
 
-            # Set ticks, ticklables, and lables on axis of value
-            ax2.tick_params(axis="y", labelright="on", right=True)
-            ax1.tick_params(axis="y", labelright="on", right=True)
+            # Set lable on axis of value
             ax1.set_ylabel(value_label)
 
             # Set ticks and ticklabels on axis of target names
@@ -496,6 +563,73 @@ def qPCR_plot(sort_by="target_asc", break_thold=10, s_multi_t = 30, title="qPCR"
             ax2.plot((-d, +d), (1-d, 1+d), **kwargs)      # Bottom-left diagonal
             ax2.plot((1-d, 1+d), (1-d, 1+d), **kwargs)        # Bottom-right diagonal
             
+            # Show the bar graph
+            plt.show()
+
+            # Save bar graph
+            fig.savefig(f'./figures/{title}_sortby-{sort_by.split("_")[0]}.{sort_by.split("_")[1]}_orien-{orien}.png', \
+                bbox_inches="tight")
+
+        # No break in bar graph
+        else:
+            # Bar plots
+            fig, ax = plt.subplots(figsize=[total_bars / 3, total_bars / 7.5], dpi=100)
+
+            # Counter for offside width for "pos"
+            counter = 0
+
+            # Loop through "s_names" in reverse order
+            for i in range(len(s_names)):
+
+                # List for "self" parameter of bar plot
+                pos = []
+                [pos.append(ele + width * (counter + 1)) for ele in basic_pos]
+
+                # Add 1 to "counter"
+                counter += 1
+            
+                # Determine bar plots for different sample names
+                bp = ax.bar(pos, s_df[s_names[i]]["Rel. Avg. Tx/Ctrl"], width, yerr=s_df[s_names[i]]["Stdev"], \
+                    align="edge", alpha=alpha, ecolor=ecolor, capsize=capsize)
+
+                # Add asterisk(s) for bars of treatment group(s) if applicable
+                if s_names[i] != "Ctrl":
+
+                    # Loop through "s_df" of iterated sample name
+                    for j in range(len(s_df[s_names[i]])):
+
+                        # Asterisk(s) for "s" parameter of "Axes.text()"
+                        text_s = s_df[s_names[i]]["P"][j]
+
+                        # x-coord for upper cap of iterated error bar
+                        text_y = s_df[s_names[i]]["Rel. Avg. Tx/Ctrl"][j] + s_df[s_names[i]]["Stdev"][j]
+
+                        # Add text label to bar in "ax"
+                        # Set space between upper cap of error bar and text as 1/40 of the width in "ax"
+                        ax.text(pos[j] + width / 2, text_y + upper_limit[s_names[i]] / 40, text_s, horizontalalignment='center')
+
+                # Determine legend for plots of different sample names
+                s_plots_legend.append(bp)
+
+            # Set limit on axis of value
+            ax.set_ylim(0, ul)
+            # Set limit on axis of target names
+            ax.set_xlim(0, len(s_df["Ctrl"]) + width) 
+
+            # Set lables on axis of value
+            ax.set_ylabel(value_label)
+
+            # Set ticks and ticklabels on axis of target names
+            ax.tick_params(axis="x", labelrotation=30)
+            ax.set_xticks(value_ticks)
+            ax.set_xticklabels(list(s_df["Ctrl"]["Target Name"]))
+
+            # Set title of bar graph
+            ax.set_title(title)
+
+            # Set legend of bar graph
+            ax.legend(s_plots_legend, s_names, loc=legend_loc) 
+
             # Show the bar graph
             plt.show()
 
