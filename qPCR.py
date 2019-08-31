@@ -4,7 +4,7 @@ from scipy import stats
 import matplotlib.pyplot as plt
 import glob
 
-def qPCR_plot(sort_by="target_asc", break_thold=10, s_multi_t = 30, title="qPCR", xlabel="Rel. Avg. Tx/Ctrl", \
+def qPCR_plot(sort_by="target_asc", break_thold=10, s_multi_t = 30, title="qPCR", value_label="Rel. Avg. Tx/Ctrl", \
         alpha=0.5, ecolor="black", capsize=4, legend_loc="best"):
 
     # ***************************************** #
@@ -236,9 +236,9 @@ def qPCR_plot(sort_by="target_asc", break_thold=10, s_multi_t = 30, title="qPCR"
     # Width of the bars
     width = 1 / (len(s_names) + 1)
     # List to hold coords of target names for bar graph
-    y_ticks = []
+    value_ticks = []
     # Offside towards the basic position (one bar width plus half of that for total bars)
-    [y_ticks.append(ele + (1 + len(s_names) / 2) * width) for ele in basic_pos]
+    [value_ticks.append(ele + (1 + len(s_names) / 2) * width) for ele in basic_pos]
 
     # Check the order of bars for the plot
     if len(s_names) == 2 and sort_by.split("_")[0] == "folds":
@@ -363,11 +363,11 @@ def qPCR_plot(sort_by="target_asc", break_thold=10, s_multi_t = 30, title="qPCR"
             # Set ticks, ticklables, and lables on axis of value
             ax1.tick_params(axis="x", labeltop="on", top=True)
             ax2.tick_params(axis="x", labeltop="on", top=True)
-            ax1.set_xlabel(xlabel)
+            ax1.set_xlabel(value_label)
 
             # Set ticks and ticklabels on axis of target names
             ax2.tick_params(axis="y", left=False)
-            ax1.set_yticks(y_ticks)
+            ax1.set_yticks(value_ticks)
             ax1.set_yticklabels(list(s_df["Ctrl"]["Target Name"]))
 
             # Set title of bar graph
@@ -384,12 +384,117 @@ def qPCR_plot(sort_by="target_asc", break_thold=10, s_multi_t = 30, title="qPCR"
             d= 0.005
             # Plot "/" on right limit of axis of target name
             kwargs = dict(transform=ax1.transAxes, color='k', clip_on=False)
-            ax1.plot((1-d,1+d), (-d,+d), **kwargs)      # Bottom-left diagonal
-            ax1.plot((1-d,1+d), (1-d,1+d), **kwargs)    # Top-left diagonal
+            ax1.plot((1-d, 1+d), (-d, +d), **kwargs)      # Bottom-left diagonal
+            ax1.plot((1-d, 1+d), (1-d, 1+d), **kwargs)    # Top-left diagonal
             # Plot "/" on left limit of axis of target name
             kwargs.update(transform=ax2.transAxes)  
-            ax2.plot((-d,+d), (1-d,1+d), **kwargs)      # Top-right diagonal
-            ax2.plot((-d,+d), (-d,+d), **kwargs)        # Bottom-right diagonal
+            ax2.plot((-d, +d), (1-d, 1+d), **kwargs)      # Top-right diagonal
+            ax2.plot((-d, +d), (-d, +d), **kwargs)        # Bottom-right diagonal
+            
+            # Show the bar graph
+            plt.show()
+
+            # Save bar graph
+            fig.savefig(f'./figures/{title}_sortby-{sort_by.split("_")[0]}.{sort_by.split("_")[1]}_orien-{orien}.png', \
+                bbox_inches="tight")
+
+    # Bar graph will be plotted vertically
+    else:
+        # Variable to store orientation of bar graph
+        orien = "V"
+
+        # Check if plot bar graph with break
+        if bar_break:
+
+            # Bar plots
+            fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True, figsize=[total_bars / 3, total_bars / 7.5], dpi=100)
+
+            # Counter for offside width for "pos"
+            counter = 0
+
+            # Loop through "s_names" in reverse order
+            for i in range(len(s_names)):
+
+                # List for "self" parameter of bar plot
+                pos = []
+                [pos.append(ele + width * (counter + 1)) for ele in basic_pos]
+
+                # Add 1 to "counter"
+                counter += 1
+            
+                # Determine bar plots for different sample names
+                bp = ax2.bar(pos, s_df[s_names[i]]["Rel. Avg. Tx/Ctrl"], width, yerr=s_df[s_names[i]]["Stdev"], \
+                    align="edge", alpha=alpha, ecolor=ecolor, capsize=capsize)
+                ax1.bar(pos, s_df[s_names[i]]["Rel. Avg. Tx/Ctrl"], width, yerr=s_df[s_names[i]]["Stdev"], \
+                    align="edge", alpha=alpha, ecolor=ecolor, capsize=capsize)
+
+                # Add asterisk(s) for bars of treatment group(s) if applicable
+                if s_names[i] != "Ctrl":
+
+                    # Loop through "s_df" of iterated sample name
+                    for j in range(len(s_df[s_names[i]])):
+
+                        # Asterisk(s) for "s" parameter of "Axes.text()"
+                        text_s = s_df[s_names[i]]["P"][j]
+
+                        # x-coord for upper cap of iterated error bar
+                        text_y = s_df[s_names[i]]["Rel. Avg. Tx/Ctrl"][j] + s_df[s_names[i]]["Stdev"][j]
+
+                        # Check if iterated bar has break and if not ...
+                        if text_y < lower_break[s_names[i]]:
+                            # Add text label to bar in "ax2"
+                            # Set space between upper cap of error bar and text as 1/20 of the width in "ax2"
+                            ax2.text(pos[j], text_y + lower_break[s_names[i]] / 20, text_s)
+                        # If break exists ...
+                        else:
+                            # Add text label to bar in "ax1"
+                            # Set space between upper cap of error bar and text as 1/20 of the width in "ax1"
+                            ax1.text(pos[j], text_y + (upper_limit[s_names[i]] - upper_break[s_names[i]]) /20, text_s)
+
+                # Determine legend for plots of different sample names
+                s_plots_legend.append(bp)
+
+            # Determine upper and lower break limits on axis of value
+            ub = max(upper_break.values())
+            lb = min(lower_break.values())
+
+            # Set limit on axis of value
+            ax2.set_ylim(0, lb)
+            ax1.set_ylim(ub, ul)
+            # Set limit on axis of target names
+            ax2.set_xlim(0, len(s_df["Ctrl"]) + width) 
+
+            # Set ticks, ticklables, and lables on axis of value
+            ax2.tick_params(axis="y", labelright="on", right=True)
+            ax1.tick_params(axis="y", labelright="on", right=True)
+            ax1.set_ylabel(value_label)
+
+            # Set ticks and ticklabels on axis of target names
+            ax1.tick_params(axis="x", bottom=False)
+            ax2.tick_params(axis="x", labelrotation=30)
+            ax2.set_xticks(value_ticks)
+            ax2.set_xticklabels(list(s_df["Ctrl"]["Target Name"]))
+
+            # Set title of bar graph
+            ax1.set_title(title)
+
+            # Set legend of bar graph
+            ax1.legend(s_plots_legend, s_names, loc=legend_loc) 
+
+            # Set spines of the bar graph for break area as invisible
+            ax2.spines["top"].set_visible(False)
+            ax1.spines["bottom"].set_visible(False)
+
+            # How big to make the diagonal lines in axes coordinates
+            d= 0.005
+            # Plot "/" on upper limit of axis of target name
+            kwargs = dict(transform=ax1.transAxes, color='k', clip_on=False)
+            ax1.plot((-d, +d), (-d, +d), **kwargs)      # Top-left diagonal
+            ax1.plot((1-d, 1+d), (-d, +d), **kwargs)    # Top-right diagonal
+            # Plot "/" on lower limit of axis of target name
+            kwargs.update(transform=ax2.transAxes)  
+            ax2.plot((-d, +d), (1-d, 1+d), **kwargs)      # Bottom-left diagonal
+            ax2.plot((1-d, 1+d), (1-d, 1+d), **kwargs)        # Bottom-right diagonal
             
             # Show the bar graph
             plt.show()
