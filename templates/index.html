@@ -43,27 +43,23 @@
         </nav>
         <!-- https://stackoverflow.com/questions/24112564/request-files-getlistfile-is-empty -->
         <form class="upload m-5" method="POST" enctype="multipart/form-data" action="/qPCR">
-            <div class="form-subheader py-1">
-                <h3 class="pl-1 my-0">Data upload</h3>
+            <div class="form-subheader p-2 my-4">
+                <h3 class="my-0">Data upload</h3>
             </div>            
-            <hr>
-            <div class="form-row upload-row">
+            <div class="form-row upload-row px-2">
                 <div class="form-group col-4">
-                    <label class="mb-2" for="file-sel">File</label>
-                    <input type="file" class="form-control file-sel py-1" id="file-sel" name="file-sel" accept=".csv">                          
+                    <label class="mb-2 pl-1" for="file-sel">File</label>
+                    <input type="file" class="form-control file-sel py-1" id="file-sel" name="file-sel" accept=".csv" required>                          
                 </div>
                 <div class="form-group col-4">
                     <label class="mb-2" for="file-ref-gene">Ref Gene</label>
                     <input type="text" class="form-control file-ref-gene py-1" id="file-ref-gene" name="file-ref-gene" 
-                        placeholder="Name of reference gene">
+                        placeholder="Name of reference gene" required>
                 </div>
                 <div class="form-group col-4">
                     <label class="mb-2" for="file-ctrl-gene">Ctrl group</label>
                     <input type="text" class="form-control file-ctrl-group py-1" id="file-ctrl-group" name="file-ctrl-group" 
-                        placeholder="Name of control group">               
-                </div>
-                <div class="form-group col-1">
-                    <p class="mb-2"><br></p>
+                        placeholder="Name of control group" required>               
                 </div>
             </div>
             <div class="d-flex flex-row-reverse but-bottom">

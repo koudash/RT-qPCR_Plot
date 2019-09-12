@@ -109,3 +109,18 @@ form {
 .shown {
     visibility: visible;
 }
+
+.form-group input:optional {
+    border-left-color: #FFFF00;
+    border-left-width: 4px;
+}
+
+.form-group input:required {
+    border-left-color: palegreen;
+    border-left-width: 4px;
+}
+
+.form-group input:invalid {
+    border-left-color: salmon;
+    border-left-width: 4px;
+}
