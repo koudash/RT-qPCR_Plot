@@ -9,7 +9,7 @@ d3.select("#file-add").on("click", function() {
 
     let newFormRow = d3.select(".upload")
         .insert('div', ".but-bottom")
-        .attr("class", "form-row upload-row");
+        .attr("class", "form-row upload-row px-2");
 
     newFormRow.append('div')
         .attr("class", "form-group col-5")
@@ -57,7 +57,7 @@ d3.select("#params-sample-groups").on("change", function() {
     
     let sampleGroupColors = d3.select(".upload")
         .insert('div', ".params-sort")
-        .attr("class", "form-row plot-params params-bar-colors");
+        .attr("class", "form-row plot-params params-bar-colors px-2");
 
     // https://stackoverflow.com/questions/17527872/get-value-of-input-element-in-event-listener-with-d3
     let sampleGroupsNum = d3.select(this).node().value;

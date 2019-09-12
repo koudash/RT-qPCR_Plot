@@ -6,10 +6,21 @@ form {
     background-color: #707070;
 }
 
-.form-subheader {
+.form-subheader-1 {
     background-color: #505050;
     border: solid #404040;
     border-width: 0 0 1px 0;
+}
+
+.form-subheader-2 {
+    background-color: #505050;
+    border: solid #404040;
+    border-width: 1px 0 1px 0;
+}
+
+.subheader-text {
+    color: silver;
+    font-size: 20px;
 }
 
 .brand {
@@ -110,8 +121,16 @@ form {
     visibility: visible;
 }
 
+.input-required {
+    color: #5CB85C;
+}
+
+.input-optional {
+    color: #5BC0DE;
+}
+
 .form-group input:optional {
-    border-left-color: #FFFF00;
+    border-left-color: #81D4FA;
     border-left-width: 4px;
 }
 
@@ -124,3 +143,4 @@ form {
     border-left-color: salmon;
     border-left-width: 4px;
 }
+
