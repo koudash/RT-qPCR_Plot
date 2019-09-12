@@ -2,67 +2,72 @@ import numpy as np
 import pandas as pd
 from scipy import stats
 import matplotlib.pyplot as plt
-import glob
 
-def qPCR_plot(sort_by="target_asc", break_thold=10, s_multi_t = 30, title="qPCR", value_label="Rel. Avg. Tx/Ctrl", \
-        alpha=0.5, ecolor="black", capsize=4, legend_loc="best"):
+'''
+Encode function named "qPCR_plot()" that takes in info. of qPCR design (reference gene and control groups for 
+results from each expt. saved as ".csv" file) as well as parameters for the display of bar graph. Generated figure 
+is returned as output of the function.
+'''
+
+# Function to read ".csv" file(s) and generate bar graph accordingly
+def qPCR_plot(
+    file_list, ref_list, ctrl_list, bar_color, 
+    sort_by="alphabet_asc", thold_hbar_ct=30, title="qPCR",
+    value_label="Avg. Rel. Tx/Ctrl", break_thold=10, alpha=0.5, 
+    capsize=4, legend_loc="0"):
 
     # ***************************************** #
     #               DATA READ-IN                #
     # ***************************************** # 
-    # Identify csv files in "data" folder
-    filelist = [filename for filename in glob.glob("./data/*.csv")]
+    # DataFrame for bar plot
+    data = pd.DataFrame(columns=["Sample Name", "Target Name", "Avg. Rel. Tx/Ctrl", "Stdev"])
 
-    # DataFrame to hold columns for bar plot
-    data = pd.DataFrame(columns=["Sample Name", "Target Name", "Rel. Avg. Tx/Ctrl", "Stdev"])
+    # Iterations to retrieve column info. for "data"
+    for i in range(len(file_list)):
 
-    # Loop through "filelist"
-    for file in filelist:
-
-        # Name of ref gene and control group
-        ref = input(f'Enter name of ref gene in {file}: ')
-        ctrl = input(f'Enter name of control group in {file}: ')
-
-        # Read data
-        raw_data = pd.read_csv(file)
+        # >>>>>>>>>> Ori. data read in <<<<<<<<<< #
+        # Names of ref gene and control group(s) in each ".csv" file
+        ref = ref_list[i]
+        ctrl = ctrl_list[i]
+        # Read data in iterated ".csv" file
+        raw_data = pd.read_csv(file_list[i])
 
         # Create DataFrame to hold columns for data processing
-        df = pd.DataFrame(columns=["Sample Name", "Target Name", "Concat Name", "CT", "Target/Ref", "Rel. Tx/Ctrl", "P"])
+        df = pd.DataFrame(columns=["Sample Name", "Target Name", "Concat Name", "CT", "Target/Ref", "Rel. Tx/Ctrl"])
+
         # Append values to columns of "df"
         for col in ["Sample Name", "Target Name", "CT"]:
             df[col] = raw_data[col]
-        # Change the name of control group to "Ctrl"
-        df.loc[df["Sample Name"] == ctrl, "Sample"] = "Ctrl"
+        # Unify the name of control group as "Ctrl" in case more than one ctrl group names are encountered
+        df.loc[df["Sample Name"] == ctrl, "Sample Name"] = "Ctrl"
         # Determine "Concat Name" of "df"
-        df["Concat Name"] = raw_data["Sample Name"] + "_" + raw_data["Target Name"]
+        df["Concat Name"] = df["Sample Name"] + "_" + df["Target Name"]
         # Set value of "Undetermined" ct as 50
         df.loc[df["CT"] == "Undetermined", "CT"] = 50
         # Typecast value in "CT" column as float
         df["CT"] = df["CT"].astype(float)
 
+        # >>>>>>>>>> Removal of ct outliers <<<<<<<<<< #
         # List to hold index of outliers in "CT" column
         outlier_index = []
 
-        # Loop through the first repeated ct value of "df"
         # Note that the default parallel repeat for each target name is 3
+        # Loop through the first repeated ct value of "df"
         for i in range(0, len(df), 3):
-
             # Save 3 repeated ct values in ascending order in "ct_list"
             ct_list = sorted([df["CT"][i], df["CT"][i + 1], df["CT"][i + 2]])
-
-            # Calculate the distance of extreme values towards their adjacent, respectively
+            # Calculate the distance in between each value in "ct_list"
             delta_upper = ct_list[2] - ct_list[1]
             delta_lower = ct_list[1] - ct_list[0]
-
-            # Since there are only 3 parallel ct values, consider the one that are far from the other two as the potential outlier
+            # Since there are only 3 parallel ct values, consider the most distant one as potential outlier
             if delta_upper > delta_lower:
                 # delta ct = 1 (2 folds) is set as the threshold for determining outlier ct value
                 if delta_upper > 1:
-                    # Append index of the maximum value among 3 ct values to "outlier_index"
+                    # Append index of the maximum ct value to "outlier_index"
                     [outlier_index.append(i + j) for j in range(3) if df["CT"][i + j] == ct_list[2]]
             else:
                 if delta_lower > 1:
-                # Append index of the minimum value among 3 ct values to "outlier_index"
+                    # Append index of the minimum ct value to "outlier_index"
                     [outlier_index.append(i + j) for j in range(3) if df["CT"][i + j] == ct_list[0]]
 
         # Drop rows with outlier ct values
@@ -70,47 +75,46 @@ def qPCR_plot(sort_by="target_asc", break_thold=10, s_multi_t = 30, title="qPCR"
         # Reset index of "df"
         df.reset_index(drop=True, inplace=True)
 
-        # Group "df" by "Concat Name" for mean ct values
+        # >>>>>>>>>> Column calc in "df" <<<<<<<<<< #
+        # ..... 1. "Target/Ref" column ..... #
+        # Calculate mean ct values for experimental repeats
         ct_mean = df.groupby(["Concat Name"]).mean()
         # Reset index for "ct_mean"
         ct_mean.reset_index(inplace=True)
 
-        # Loop through "Sample Name"
+        # Loop through sample groups including both ctrl and treatments
         for s_name in df["Sample Name"].unique():
-
             # Calculate mean ct value of ref gene for iterated "Sample Name"
-            s_name_ct_mean = ct_mean.loc[ct_mean["Concat Name"] == f'{s_name}_{ref}', "CT"].values[0]
-
-            # Calculate ratio of Target/Ref for each repeat of all target genes
-            df.loc[df["Sample Name"] == s_name, "Target/Ref"] = pow(2, (s_name_ct_mean - df["CT"]))
+            ct_mean_ref = ct_mean.loc[ct_mean["Concat Name"] == f'{s_name}_{ref}', "CT"].values[0]
+            # Calculate ratio of Target/Ref for each record with iterated "Sample Name" 
+            df.loc[df["Sample Name"] == s_name, "Target/Ref"] = pow(2, (ct_mean_ref - df["CT"]))
 
         # Typecast values in "Target/Ref" column from non-null object to float
         df["Target/Ref"] = df["Target/Ref"].astype(float)
-
-        # Remove ref gene from "df"
+        # Remove rows of ref gene from "df"
         df = df.loc[df["Target Name"] != ref, :]
 
-        # DataFrame to hold mean Target/Ref ratio of Target Names in control group
-        ctrl_mean_df = df.loc[df["Sample Name"] == "Ctrl", :].groupby(["Concat Name"])["Target/Ref"].mean()
+        # ..... 2. "Rel. Tx/Ctrl" column ..... #
+        # DataFrame to hold mean Target/Ref ratio for each "Target Name" in control group
+        t_r_mean_ctrl = df.loc[df["Sample Name"] == "Ctrl", :].groupby(["Concat Name"])["Target/Ref"].mean()
 
         # Loop through "Target Name"
         for t_name in df["Target Name"].unique():
-
             # Loop through "Sample Name"
             for s_name in df["Sample Name"].unique():
-
-                # Calculate relative ratio of Target/Ref (as compared to that of avg. value from Ctrl) for each repeat of all target genes
-                df.loc[df["Concat Name"] == f'{s_name}_{t_name}', "Rel. Tx/Ctrl"] = df["Target/Ref"] / ctrl_mean_df[f'Ctrl_{t_name}']
+                # Calculate relative ratio of Target/Ref (as compared to that of avg. value from Ctrl) for each repeat of target genes
+                df.loc[df["Concat Name"] == f'{s_name}_{t_name}', "Rel. Tx/Ctrl"] = df["Target/Ref"] / t_r_mean_ctrl[f'Ctrl_{t_name}']
 
         # Typecast values in "Rel. Tx/Ctrl" column from non-null object to float
         df["Rel. Tx/Ctrl"] = df["Rel. Tx/Ctrl"].astype(float)
 
-        # DataFrame to hold columns of iterated csv file for bar plot
-        file_data = pd.DataFrame(columns=["Sample Name", "Target Name", "Concat Name", "Rel. Avg. Tx/Ctrl", "Stdev", "P"])
+        # >>>>>>>>>> Column calc in "file_data" for bar plot <<<<<<<<<< #
+        # DataFrame to hold columns of iterated ".csv" file for bar plot
+        file_data = pd.DataFrame(columns=["Sample Name", "Target Name", "Concat Name", "Avg. Rel. Tx/Ctrl", "Stdev", "P"])
 
-        # Append values to columns of "file_data"
+        # Calculate values in columns of "file_data"
         file_data["Concat Name"] = df.groupby(["Concat Name"])["Rel. Tx/Ctrl"].mean().index
-        file_data["Rel. Avg. Tx/Ctrl"] = df.groupby(["Concat Name"])["Rel. Tx/Ctrl"].mean().values
+        file_data["Avg. Rel. Tx/Ctrl"] = df.groupby(["Concat Name"])["Rel. Tx/Ctrl"].mean().values
         file_data["Stdev"] = df.groupby(["Concat Name"])["Rel. Tx/Ctrl"].std().values
 
         # Lists to store "Sample Name" and "Target Name"
@@ -121,12 +125,11 @@ def qPCR_plot(sort_by="target_asc", break_thold=10, s_multi_t = 30, title="qPCR"
         for i in range(len(file_data)):
             s_name_list.append(file_data["Concat Name"][i].split("_")[0])
             t_name_list.append(file_data["Concat Name"][i].split("_")[1])
-
         # Add values to columns of "Sample Name" and "Target Name" from "file_data"
         file_data["Sample Name"] = s_name_list
         file_data["Target Name"] = t_name_list
 
-        # Loop through target names of "df"
+        # Loop through "Target Name" of "df"
         for t_name in df["Target Name"].unique():
 
             # DataFrame to hold rows of "t_name"
@@ -139,11 +142,9 @@ def qPCR_plot(sort_by="target_asc", break_thold=10, s_multi_t = 30, title="qPCR"
 
             # Loop through "t_name_df"
             for i in range(len(t_name_df)):
-
                 # Variable for "Sample Name"
                 s = t_name_df["Sample Name"][i]
-
-                # Check if "p_df[s]" exists
+                # Create key of "s" in "p_df" if not exists
                 if not s in list(p_df.keys()):
                     p_df[s] = []
                 # Append "Rel. Tx/Ctrl" value to "p_df[s]"
@@ -152,27 +153,21 @@ def qPCR_plot(sort_by="target_asc", break_thold=10, s_multi_t = 30, title="qPCR"
             # Loop through keys of "p_df"
             for s in list(p_df.keys()):
 
-                # Perform t-test on group(s) other than "Ctrl"
+                # Perform t-test between ctrl and treatment(s) groups
                 if s != "Ctrl":
-
                     # Consider default variances for values between two series are equal
                     equal_var = True
-
                     # Calculate p_cdf for f-test (cumulative distribution function)
                     p_cdf = stats.f.cdf(np.var(p_df[s]) / np.var(p_df["Ctrl"]), len(p_df[s]) - 1, len(p_df["Ctrl"]) - 1)
-
                     # Make sure variance1 is greater than variance2 to determine "p_cdf"
                     if np.var(p_df["Ctrl"]) > np.var(p_df[s]):
-                        p_cdf = 1 - p_cdf
-                    
+                        p_cdf = 1 - p_cdf                    
                     # Check whether p-cdf is less than alpha which is by default 0.05 and if true ...
                     if p_cdf < 0.05:
                         # Reject the null hypothesis and accept that the variances between two series are not equal
-                        equal_var = False                  
-
+                        equal_var = False
                     # Calculate p value for t-test
                     p = stats.ttest_ind(p_df[s], p_df["Ctrl"], equal_var=equal_var)[1]
-
                     # Variable for asterisk to be shown on bar plot
                     asterisk = ""
                     # Determine "asterisk" based on "p"
@@ -183,121 +178,96 @@ def qPCR_plot(sort_by="target_asc", break_thold=10, s_multi_t = 30, title="qPCR"
                     elif p < 0.05:
                         asterisk = "*"
                     # Append "asterisk" to designated "P" column of "file_data"
-                    file_data.loc[file_data["Concat Name"] == f'{s}_{t_name}', "P"] = asterisk
-                
+                    file_data.loc[file_data["Concat Name"] == f'{s}_{t_name}', "P"] = asterisk                
                 else:
                     # Append "" to "P" column of "Ctrl" in "file_data"
                     file_data.loc[file_data["Concat Name"] == f'{s}_{t_name}', "P"] = ""
 
         # Drop "Concat Name" column from "file_data"
-        file_data = file_data.drop(columns=["Concat Name"])
-        
+        file_data = file_data.drop(columns=["Concat Name"])        
         # Add "file_data" to "data"
         data = pd.concat([data, file_data], sort=True, ignore_index=True)
 
     # ************************************** #
     #               BAR PLOT                 #
     # ************************************** # 
-    # DataFrame is sorted by "Target Name" in descending order by default after all csv files have been processed
+    # Processed data is sorted by "Target Name" in descending order by default after all ".csv" files have been processed
     data = data.sort_values(by=["Target Name"])
 
     # Dict to store DataFrame for different sample names
     s_df = {}
-
     # List to store legend for plots of different sample names
     s_plots_legend = []
-
     # Dict for upper limit on axis of value
     upper_limit = {}
-
     # Boolean for bar break
     bar_break = False
-
     # Dicts for break values on axis of value
     upper_break = {}
     lower_break = {}
 
     # List to hold unique sample names (control + treatment groups) of "data"
     s_names = list(data["Sample Name"].unique())
-
     # Make sure "Ctrl" is the first element in "s_names"
     s_names.remove("Ctrl")
     s_names.insert(0, "Ctrl")
-
     # Divide "data" into different DataFrames according to unique elements in "s_names" and reset index for each "s_name"
     for s_name in s_names:
         s_df[s_name] = data.loc[data["Sample Name"] == s_name, :].reset_index(drop=True)
 
-    # Variable for total bars
-    total_bars = len(s_names) * len(s_df["Ctrl"]["Target Name"])
-
-    # Basic position on axis of target names for bar graph
-    basic_pos = range(len(s_df["Ctrl"]))
-    # Width of the bars
-    width = 1 / (len(s_names) + 1)
-    # List to hold coords of target names for bar graph
-    value_ticks = []
-    # Offside towards the basic position (one bar width plus half of that for total bars)
-    [value_ticks.append(ele + (1 + len(s_names) / 2) * width) for ele in basic_pos]
-
-    # Check the order of bars for the plot
-    if len(s_names) == 2 and sort_by.split("_")[0] == "folds":
-
+    # Re-order "s_df" of ctrl and treatment groups if "sort by value" option is available and selected
+    if len(s_names) == 2 and sort_by.split("_")[0] == "value":
         # Boolean for ascending parameter
         sort_asc = False
         if sort_by.split("_")[1] == "asc":
             sort_asc = True
-
-        # Sort "s_df" of tx group by sort_by variable and reset index
-        s_df[s_names[1]] = s_df[s_names[1]].sort_values(by=["Rel. Avg. Tx/Ctrl"], ascending=sort_asc).reset_index(drop=True)
-        # Sort "s_df" of "Ctrl" group accordingly
+        # Sort "s_df" of treatment group by "sort_by" and reset index
+        # Note that "Ctrl" is the first value in "s_names"
+        s_df[s_names[1]] = s_df[s_names[1]].sort_values(by=["Avg. Rel. Tx/Ctrl"], ascending=sort_asc).reset_index(drop=True)
+        # Sort "s_df" of ctrl group accordingly
         # https://stackoverflow.com/questions/45576800/how-to-sort-dataframe-based-on-a-column-in-another-dataframe-in-pandas
-        s_df["Ctrl"] = s_df["Ctrl"].set_index("Target Name")
-        s_df["Ctrl"] = s_df["Ctrl"].reindex(index=s_df[s_names[1]]["Target Name"])
-        s_df["Ctrl"] = s_df["Ctrl"].reset_index()
+        s_df["Ctrl"] = s_df["Ctrl"].set_index("Target Name").reindex(index=s_df[s_names[1]]["Target Name"]).reset_index()
 
-    # <---------- DETERMINATION OF UPPER LIMIT, UPPER BREAK, AND LOWER BREAK FOR EACH SAMPLE NAME DATAFREAME ----------> #
-    # Loop through "s_names"
+    # Basic position on axis of target names for bar graph
+    basic_pos = range(len(s_df["Ctrl"]))
+    # Bar width (extra one on denominator represents gap between bunches of bars from different sample groups)
+    width = 1 / (len(s_names) + 1)
+    # List to hold coords on axis of target names for bar graph
+    value_ticks = []
+    # Coords for ticks on axis of target names (basic position + offsides)
+    # Note that offsides towards basic position equals to gap (1 * width) plus half of that for all bars (middle position of bars)
+    [value_ticks.append(num + (1 + len(s_names) / 2) * width) for num in basic_pos]
+
+    # Determine break limits (if applicable) and upper limit on axis of value
     for i in range(len(s_names)):
 
-        # Sort iterated "s_df" by "Rel. Avg. Tx/Ctrl" in ascending order, reset index, and temporarily store in "s_df_iter" variable 
-        s_df_iter = s_df[s_names[i]].sort_values(by=["Rel. Avg. Tx/Ctrl"], ascending=True).reset_index(drop=True)
+        # Sort iterated "s_df" by "Avg. Rel. Tx/Ctrl" in ascending order, reset index, and temporarily store in "s_df_iter" variable 
+        s_df_iter = s_df[s_names[i]].sort_values(by=["Avg. Rel. Tx/Ctrl"], ascending=True).reset_index(drop=True)
 
-        # Determine upper limit on axis of value for iterated "s_df"
-        upper_limit[s_names[i]] = round(s_df_iter.iloc[-1]["Rel. Avg. Tx/Ctrl"] * 1.5)
+        # Determine upper limit on axis of value for iterated "s_df" (1.5 folds of the maximum "Avg. Rel. Tx/Ctrl" value)
+        upper_limit[s_names[i]] = round((s_df_iter.iloc[-1]["Avg. Rel. Tx/Ctrl"] + s_df_iter.iloc[-1]["Stdev"])* 1.2)
 
-        # Loop through "Target Name" of "s_df_iter"
+        # Determine if break is applicable for each target name
         for j in range(len(s_df_iter) - 1):
-
             # Check if break will be applied on axis of value
-            if s_df_iter["Rel. Avg. Tx/Ctrl"][j + 1] / s_df_iter["Rel. Avg. Tx/Ctrl"][j] > break_thold:
+            if s_df_iter["Avg. Rel. Tx/Ctrl"][j + 1] / s_df_iter["Avg. Rel. Tx/Ctrl"][j] > break_thold:
+                # Only make breaks for values greater than 1 (ctrl group)
+                if s_df_iter["Avg. Rel. Tx/Ctrl"][j] > 1:
+                    # Change "bar_break" to True
+                    bar_break = True
+                    # Determine coords of lower and upper break on axis of value for iterated target name
+                    lower_break[s_names[i]] = round((s_df_iter["Avg. Rel. Tx/Ctrl"][j] + s_df_iter["Stdev"][j]) * 1.05)
+                    upper_break[s_names[i]] = round((s_df_iter["Avg. Rel. Tx/Ctrl"][j + 1] - s_df_iter["Stdev"][j + 1]) * 0.95)
+                    break
 
-                # Change "bar_break" to True
-                bar_break = True
-
-                # Determine lower break value on axis of value for bar of iterated "Target Name"
-                lower_break[s_names[i]] = round(s_df_iter["Rel. Avg. Tx/Ctrl"][j] * 1.5)
-
-                # Loop through the rest of "Target Name", including j
-                for k in range(j, len(s_df_iter) - 1):
-
-                    # Look for upper break value on axis of value for bar of iterated "Target Name"
-                    if s_df_iter["Rel. Avg. Tx/Ctrl"][k + 1] / s_df_iter["Rel. Avg. Tx/Ctrl"][k] > break_thold:
-
-                        # Determine upper break value on axis of value for bar of iterated "Target Name"
-                        upper_break[s_names[i]] = round(s_df_iter["Rel. Avg. Tx/Ctrl"][k + 1] * 0.5)
-
-                        # Jump out "for loop"
-                        break
-
-    # Determine upper limit on axis of value
+    # Determine upper limit for all data on axis of value
     ul = max(upper_limit.values())
 
-    # Check if bar graph will be plotted horizontally
-    if total_bars > s_multi_t:
+    # Variable for total bars
+    total_bars = len(s_names) * len(basic_pos)
 
-        # Variable to store orientation of bar graph
-        orien = "H"
+    # Check if bar graph will be plotted horizontally
+    if total_bars > thold_hbar_ct:
     
         # Check if plot bar graph with break
         if bar_break:
@@ -311,41 +281,51 @@ def qPCR_plot(sort_by="target_asc", break_thold=10, s_multi_t = 30, title="qPCR"
             # Loop through "s_names" in reverse order
             for i in range(len(s_names))[::-1]:
 
-                # List for "self" parameter of bar plot
+                # List for coords on axis of target names in bar plot
                 pos = []
-                [pos.append(ele + width * (counter + 1)) for ele in basic_pos]
+                [pos.append(num + (counter + 1.5) * width) for num in basic_pos]
 
-                # Add 1 to "counter"
+                # Add 1 to "counter" after coord appending to "pos"
                 counter += 1
-            
-                # Determine bar plots for different sample names
-                bp = ax1.barh(pos, s_df[s_names[i]]["Rel. Avg. Tx/Ctrl"], width, xerr=s_df[s_names[i]]["Stdev"], \
-                    align="edge", alpha=alpha, ecolor=ecolor, capsize=capsize)
-                ax2.barh(pos, s_df[s_names[i]]["Rel. Avg. Tx/Ctrl"], width, xerr=s_df[s_names[i]]["Stdev"], \
-                    align="edge", alpha=alpha, ecolor=ecolor, capsize=capsize)
+
+                # Plot bar graph with right error bars only            
+                # https://stackoverflow.com/questions/45752981/removing-the-bottom-error-caps-only-on-matplotlib
+                # Determine bar plots of "ax1" for different sample names
+                bp = ax1.barh(pos, s_df[s_names[i]]["Avg. Rel. Tx/Ctrl"], width, color=bar_color[f'Bar Color{i}'], alpha=alpha)
+                # Set up error bar in "ax1"
+                plotline1, caplines1, barlinecols1 = ax1.errorbar(s_df[s_names[i]]["Avg. Rel. Tx/Ctrl"], pos, \
+                    xerr=s_df[s_names[i]]["Stdev"], xlolims=True, ls="None", color="k")
+                # Set up shape and size of error bar cap in "ax1"
+                caplines1[0].set_marker("|")
+                caplines1[0].set_markersize(capsize)
+                # Determine bar plots of "ax2" for different sample names
+                ax2.barh(pos, s_df[s_names[i]]["Avg. Rel. Tx/Ctrl"], width, color=bar_color[f'Bar Color{i}'], alpha=alpha)
+                # Set up error bar in "ax2"
+                plotline2, caplines2, barlinecols2 = ax2.errorbar(s_df[s_names[i]]["Avg. Rel. Tx/Ctrl"], pos, \
+                    xerr=s_df[s_names[i]]["Stdev"], xlolims=True, ls="None", color="k")
+                # Set up shape and size of error bar cap in "ax2"                
+                caplines2[0].set_marker("|")
+                caplines2[0].set_markersize(capsize)
 
                 # Add asterisk(s) for bars of treatment group(s) if applicable
                 if s_names[i] != "Ctrl":
 
                     # Loop through "s_df" of iterated sample name
                     for j in range(len(s_df[s_names[i]])):
-
                         # Asterisk(s) for "s" parameter of "Axes.text()"
                         text_s = s_df[s_names[i]]["P"][j]
-
                         # x-coord for upper cap of iterated error bar
-                        text_x = s_df[s_names[i]]["Rel. Avg. Tx/Ctrl"][j] + s_df[s_names[i]]["Stdev"][j]
-
+                        text_x = s_df[s_names[i]]["Avg. Rel. Tx/Ctrl"][j] + s_df[s_names[i]]["Stdev"][j]
                         # Check if iterated bar has break and if not ...
                         if text_x < lower_break[s_names[i]]:
                             # Add text label to bar in "ax1"
                             # Set space between upper cap of error bar and text as 1/20 of the width in "ax1"
-                            ax1.text(text_x + lower_break[s_names[i]] / 20, pos[j] + width / 8, text_s)
+                            ax1.text(text_x + lower_break[s_names[i]] / 20, pos[j] - 3 * width / 8, text_s)
                         # If break exists ...
                         else:
                             # Add text label to bar in "ax2"
                             # Set space between upper cap of error bar and text as 1/20 of the width in "ax2"
-                            ax2.text(text_x + (upper_limit[s_names[i]] - upper_break[s_names[i]]) /20, pos[j] + width / 8, text_s)
+                            ax2.text(text_x + (upper_limit[s_names[i]] - upper_break[s_names[i]]) /20, pos[j] - 3 * width / 8, text_s)
 
                 # Determine legend for plots of different sample names
                 s_plots_legend.append(bp)
@@ -390,13 +370,6 @@ def qPCR_plot(sort_by="target_asc", break_thold=10, s_multi_t = 30, title="qPCR"
             kwargs.update(transform=ax2.transAxes)  
             ax2.plot((-d, +d), (1-d, 1+d), **kwargs)      # Top-right diagonal
             ax2.plot((-d, +d), (-d, +d), **kwargs)        # Bottom-right diagonal
-            
-            # Show the bar graph
-            plt.show()
-
-            # Save bar graph
-            fig.savefig(f'./figures/{title}_sortby-{sort_by.split("_")[0]}.{sort_by.split("_")[1]}_orien-{orien}.png', \
-                bbox_inches="tight")
 
         # No break in horizontal bar graph
         else:
@@ -410,32 +383,35 @@ def qPCR_plot(sort_by="target_asc", break_thold=10, s_multi_t = 30, title="qPCR"
             # Loop through "s_names" in reverse order
             for i in range(len(s_names))[::-1]:
 
-                # List for "self" parameter of bar plot
-                pos = []
-                [pos.append(ele + width * (counter + 1)) for ele in basic_pos]
+                # List for coords on axis of target names in bar plot
+                pos = []                
+                [pos.append(ele + (counter + 1.5) * width) for ele in basic_pos]
 
                 # Add 1 to "counter"
                 counter += 1
-            
+
+                # Plot bar graph with right error bars only            
                 # Determine bar plots for different sample names
-                bp = ax.barh(pos, s_df[s_names[i]]["Rel. Avg. Tx/Ctrl"], width, xerr=s_df[s_names[i]]["Stdev"], \
-                    align="edge", alpha=alpha, ecolor=ecolor, capsize=capsize)
+                bp = ax.barh(pos, s_df[s_names[i]]["Avg. Rel. Tx/Ctrl"], width, color=bar_color[f'Bar Color{i}'], alpha=alpha)
+                # Set up error bar
+                plotline, caplines, barlinecols = ax.errorbar(s_df[s_names[i]]["Avg. Rel. Tx/Ctrl"], pos, \
+                    xerr=s_df[s_names[i]]["Stdev"], xlolims=True, ls="None", color="k")
+                # Set up shape and size of error bar cap
+                caplines[0].set_marker("|")
+                caplines[0].set_markersize(capsize) 
 
                 # Add asterisk(s) for bars of treatment group(s) if applicable
                 if s_names[i] != "Ctrl":
 
                     # Loop through "s_df" of iterated sample name
                     for j in range(len(s_df[s_names[i]])):
-
                         # Asterisk(s) for "s" parameter of "Axes.text()"
                         text_s = s_df[s_names[i]]["P"][j]
-
                         # x-coord for upper cap of iterated error bar
-                        text_x = s_df[s_names[i]]["Rel. Avg. Tx/Ctrl"][j] + s_df[s_names[i]]["Stdev"][j]
-
+                        text_x = s_df[s_names[i]]["Avg. Rel. Tx/Ctrl"][j] + s_df[s_names[i]]["Stdev"][j]
                         # Add text label to bar in "ax1"
                         # Set space between upper cap of error bar and text as 1/20 of the width in "ax1"
-                        ax.text(text_x + upper_limit[s_names[i]] / 40, pos[j] + width / 8, text_s)
+                        ax.text(text_x + upper_limit[s_names[i]] / 40, pos[j] - 3 * width / 8, text_s)
 
                 # Determine legend for plots of different sample names
                 s_plots_legend.append(bp)
@@ -457,19 +433,10 @@ def qPCR_plot(sort_by="target_asc", break_thold=10, s_multi_t = 30, title="qPCR"
             ax.set_title(title)
 
             # Set legend of bar graph
-            ax.legend(s_plots_legend, s_names[::-1], loc=legend_loc) 
-          
-            # Show the bar graph
-            plt.show()
-
-            # Save bar graph
-            fig.savefig(f'./figures/{title}_sortby-{sort_by.split("_")[0]}.{sort_by.split("_")[1]}_orien-{orien}.png', \
-                bbox_inches="tight")
+            ax.legend(s_plots_legend, s_names[::-1], loc=legend_loc)
 
     # Bar graph will be plotted vertically
     else:
-        # Variable to store orientation of bar graph
-        orien = "V"
 
         # Check if plot bar graph with break
         if bar_break:
@@ -483,18 +450,30 @@ def qPCR_plot(sort_by="target_asc", break_thold=10, s_multi_t = 30, title="qPCR"
             # Loop through "s_names" in reverse order
             for i in range(len(s_names)):
 
-                # List for "self" parameter of bar plot
+                # List for coords on axis of target names in bar plot
                 pos = []
-                [pos.append(ele + width * (counter + 1)) for ele in basic_pos]
+                [pos.append(ele + (counter + 1.5) * width) for ele in basic_pos]
 
                 # Add 1 to "counter"
                 counter += 1
             
-                # Determine bar plots for different sample names
-                bp = ax2.bar(pos, s_df[s_names[i]]["Rel. Avg. Tx/Ctrl"], width, yerr=s_df[s_names[i]]["Stdev"], \
-                    align="edge", alpha=alpha, ecolor=ecolor, capsize=capsize)
-                ax1.bar(pos, s_df[s_names[i]]["Rel. Avg. Tx/Ctrl"], width, yerr=s_df[s_names[i]]["Stdev"], \
-                    align="edge", alpha=alpha, ecolor=ecolor, capsize=capsize)
+                # Plot bar graph with top error bars only            
+                # Determine bar plots of "ax1" for different sample names
+                bp = ax1.bar(pos, s_df[s_names[i]]["Avg. Rel. Tx/Ctrl"], width, color=bar_color[f'Bar Color{i}'], alpha=alpha)
+                # Set up error bar in "ax1"
+                plotline1, caplines1, barlinecols1 = ax1.errorbar(pos, s_df[s_names[i]]["Avg. Rel. Tx/Ctrl"], \
+                    yerr=s_df[s_names[i]]["Stdev"], lolims=True, ls="None", color="k")
+                # Set up shape and size of error bar cap in "ax1"
+                caplines1[0].set_marker("_")
+                caplines1[0].set_markersize(capsize)
+                # Determine bar plots of "ax2" for different sample names
+                ax2.bar(pos, s_df[s_names[i]]["Avg. Rel. Tx/Ctrl"], width, color=bar_color[f'Bar Color{i}'], alpha=alpha)
+                # Set up error bar in "ax2"
+                plotline2, caplines2, barlinecols2 = ax2.errorbar(pos, s_df[s_names[i]]["Avg. Rel. Tx/Ctrl"], \
+                    yerr=s_df[s_names[i]]["Stdev"], lolims=True, ls="None", color="k")
+                # Set up shape and size of error bar cap in "ax2"                
+                caplines2[0].set_marker("_")
+                caplines2[0].set_markersize(capsize)
 
                 # Add asterisk(s) for bars of treatment group(s) if applicable
                 if s_names[i] != "Ctrl":
@@ -504,20 +483,18 @@ def qPCR_plot(sort_by="target_asc", break_thold=10, s_multi_t = 30, title="qPCR"
 
                         # Asterisk(s) for "s" parameter of "Axes.text()"
                         text_s = s_df[s_names[i]]["P"][j]
-
                         # x-coord for upper cap of iterated error bar
-                        text_y = s_df[s_names[i]]["Rel. Avg. Tx/Ctrl"][j] + s_df[s_names[i]]["Stdev"][j]
-
+                        text_y = s_df[s_names[i]]["Avg. Rel. Tx/Ctrl"][j] + s_df[s_names[i]]["Stdev"][j]
                         # Check if iterated bar has break and if not ...
                         if text_y < lower_break[s_names[i]]:
                             # Add text label to bar in "ax2"
                             # Set space between upper cap of error bar and text as 1/20 of the width in "ax2"
-                            ax2.text(pos[j] + width / 2, text_y + lower_break[s_names[i]] / 20, text_s, horizontalalignment='center')
+                            ax2.text(pos[j], text_y + lower_break[s_names[i]] / 20, text_s, horizontalalignment='center')
                         # If break exists ...
                         else:
                             # Add text label to bar in "ax1"
                             # Set space between upper cap of error bar and text as 1/20 of the width in "ax1"
-                            ax1.text(pos[j] + width / 2, text_y + (upper_limit[s_names[i]] - upper_break[s_names[i]]) /20, text_s, \
+                            ax1.text(pos[j], text_y + (upper_limit[s_names[i]] - upper_break[s_names[i]]) /20, text_s, \
                                 horizontalalignment='center')
 
                 # Determine legend for plots of different sample names
@@ -562,13 +539,6 @@ def qPCR_plot(sort_by="target_asc", break_thold=10, s_multi_t = 30, title="qPCR"
             kwargs.update(transform=ax2.transAxes)  
             ax2.plot((-d, +d), (1-d, 1+d), **kwargs)      # Bottom-left diagonal
             ax2.plot((1-d, 1+d), (1-d, 1+d), **kwargs)        # Bottom-right diagonal
-            
-            # Show the bar graph
-            plt.show()
-
-            # Save bar graph
-            fig.savefig(f'./figures/{title}_sortby-{sort_by.split("_")[0]}.{sort_by.split("_")[1]}_orien-{orien}.png', \
-                bbox_inches="tight")
 
         # No break in bar graph
         else:
@@ -581,16 +551,22 @@ def qPCR_plot(sort_by="target_asc", break_thold=10, s_multi_t = 30, title="qPCR"
             # Loop through "s_names" in reverse order
             for i in range(len(s_names)):
 
-                # List for "self" parameter of bar plot
+                # List for coords on axis of target names in bar plot
                 pos = []
-                [pos.append(ele + width * (counter + 1)) for ele in basic_pos]
+                [pos.append(ele + (counter + 1.5) * width) for ele in basic_pos]
 
                 # Add 1 to "counter"
                 counter += 1
-            
+
+                # Plot bar graph with top error bars only            
                 # Determine bar plots for different sample names
-                bp = ax.bar(pos, s_df[s_names[i]]["Rel. Avg. Tx/Ctrl"], width, yerr=s_df[s_names[i]]["Stdev"], \
-                    align="edge", alpha=alpha, ecolor=ecolor, capsize=capsize)
+                bp = ax.bar(pos, s_df[s_names[i]]["Avg. Rel. Tx/Ctrl"], width, color=bar_color[f'Bar Color{i}'], alpha=alpha)
+                # Set up error bar in "ax1"
+                plotline, caplines, barlinecols = ax.errorbar(pos, s_df[s_names[i]]["Avg. Rel. Tx/Ctrl"], \
+                    yerr=s_df[s_names[i]]["Stdev"], lolims=True, ls="None", color="k")
+                # Set up shape and size of error bar cap
+                caplines[0].set_marker("_")
+                caplines[0].set_markersize(capsize)                
 
                 # Add asterisk(s) for bars of treatment group(s) if applicable
                 if s_names[i] != "Ctrl":
@@ -600,13 +576,11 @@ def qPCR_plot(sort_by="target_asc", break_thold=10, s_multi_t = 30, title="qPCR"
 
                         # Asterisk(s) for "s" parameter of "Axes.text()"
                         text_s = s_df[s_names[i]]["P"][j]
-
                         # x-coord for upper cap of iterated error bar
-                        text_y = s_df[s_names[i]]["Rel. Avg. Tx/Ctrl"][j] + s_df[s_names[i]]["Stdev"][j]
-
+                        text_y = s_df[s_names[i]]["Avg. Rel. Tx/Ctrl"][j] + s_df[s_names[i]]["Stdev"][j]
                         # Add text label to bar in "ax"
                         # Set space between upper cap of error bar and text as 1/40 of the width in "ax"
-                        ax.text(pos[j] + width / 2, text_y + upper_limit[s_names[i]] / 40, text_s, horizontalalignment='center')
+                        ax.text(pos[j], text_y + upper_limit[s_names[i]] / 40, text_s, horizontalalignment='center')
 
                 # Determine legend for plots of different sample names
                 s_plots_legend.append(bp)
@@ -630,9 +604,7 @@ def qPCR_plot(sort_by="target_asc", break_thold=10, s_multi_t = 30, title="qPCR"
             # Set legend of bar graph
             ax.legend(s_plots_legend, s_names, loc=legend_loc) 
 
-            # Show the bar graph
-            plt.show()
+    # Make sure rotated xlables are included in "fig"
+    fig.tight_layout()    
 
-            # Save bar graph
-            fig.savefig(f'./figures/{title}_sortby-{sort_by.split("_")[0]}.{sort_by.split("_")[1]}_orien-{orien}.png', \
-                bbox_inches="tight")
+    return fig

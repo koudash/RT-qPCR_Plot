@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="UTF-8">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <meta http-equiv="X-UA-Compatible" content="ie=edge">
+        <title>qPCR</title>
+        <!-- Font Awesome -->
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.10.1/css/all.css" 
+            integrity="sha384-wxqG4glGB3nlqX0bi23nmgwCSjWIW13BdLUEYC4VIMehfbcro/ATkyDsF/AbIOVe" crossorigin="anonymous">
+        <!-- Bootstrap CSS -->
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" 
+            integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+        <!-- Bootstrap jQuery and Popper.js -->
+        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" 
+            integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" 
+            crossorigin="anonymous">
+        </script>
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" 
+            integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" 
+            crossorigin="anonymous">
+        </script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" 
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+        <!-- "Sketchy" theme from Bootswatch -->
+        <link rel="stylesheet" type="text/css" href="https://bootswatch.com/4/sketchy/bootstrap.min.css">
+        <!-- Local style CSS -->
+        <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='css/style.css') }}">
+        <!-- Favicon -->
+        <link rel="icon" href="/static/images/favicon_qpcr.png">
+    </head>
+    <body>
+        <nav class="navbar navbar-expand-sm navbar-light py-0">
+            <a class="navbar-brand ml-3 mr-0 px-3" href="#">
+                    <span class="text-white brand">RT-qPCR |</span>
+                    <span class="change-color">
+                        &ensp;Turn 
+                        <i class="fas fa-dna change-color-f"></i>
+                         into 
+                        <i class="far fa-chart-bar change-color-r"></i>
+                    </span>
+            </a>
+        </nav>
+        <!-- https://stackoverflow.com/questions/24112564/request-files-getlistfile-is-empty -->
+        <form class="upload m-5" method="POST" enctype="multipart/form-data" action="/qPCR">
+            <div class="form-subheader py-1">
+                <h3 class="pl-1 my-0">Data upload</h3>
+            </div>            
+            <hr>
+            <div class="form-row upload-row">
+                <div class="form-group col-4">
+                    <label class="mb-2" for="file-sel">File</label>
+                    <input type="file" class="form-control file-sel py-1" id="file-sel" name="file-sel" accept=".csv">                          
+                </div>
+                <div class="form-group col-4">
+                    <label class="mb-2" for="file-ref-gene">Ref Gene</label>
+                    <input type="text" class="form-control file-ref-gene py-1" id="file-ref-gene" name="file-ref-gene" 
+                        placeholder="Name of reference gene">
+                </div>
+                <div class="form-group col-4">
+                    <label class="mb-2" for="file-ctrl-gene">Ctrl group</label>
+                    <input type="text" class="form-control file-ctrl-group py-1" id="file-ctrl-group" name="file-ctrl-group" 
+                        placeholder="Name of control group">               
+                </div>
+                <div class="form-group col-1">
+                    <p class="mb-2"><br></p>
+                </div>
+            </div>
+            <div class="d-flex flex-row-reverse but-bottom">
+                <button type="reset" class="btn btn-outline-info font-weight-bold">Reset</button>
+                <button type="button" id="file-add" class="btn btn-outline-success font-weight-bold">Add Data</button>
+            </div>  
+            <h3>Plot params</h3>
+            <hr>
+            <div class="form-row plot-params">
+                <div class="form-group col-2 px-1">
+                    <span>No. of sample groups: </span>
+                </div>
+                <div class="form-group col-9">
+                    <input type="number" class="col-5" id="params-sample-groups" name="params-sample-groups" min="1" step="1" 
+                        placeholder="Quantity of sample groups for bar plot">            
+                </div>
+            </div>
+            <div class="form-row plot-params params-sort">
+                <div class="form-group col-2"px-1>
+                    <span>Bar sorting: </span>
+                </div>
+                <div class="form-group col-9">
+                    &emsp;
+                    <input type="radio" name="params-sort" value="alphabet_asc"> alphabet_asc&emsp;&emsp;
+                    <input type="radio" name="params-sort" value="alphabet_desc"> alphabet_desc&emsp;&emsp;
+                    <span class="sort-values hidden"><input type="radio" name="params-sort" value="value_asc"> value_asc&emsp;&emsp;</span>
+                    <span class="sort-values hidden"><input type="radio" name="params-sort" value="value_desc"> value_desc</span>                    
+                </div>
+            </div>   
+            <div class="form-row plot-params params-total-bars">
+                <div class="form-group col-2"px-1>
+                    <span>Total bar thold for h-plot: </span>
+                </div>
+                <div class="form-group col-9">
+                    <input type="number" class="col-5" id="params-total-bars" name="params-total-bars" min="1" step="1" 
+                        placeholder="Threshold of bar ct for horizontal plot">            
+                </div>
+            </div>
+            <div class="form-row plot-params">
+                <div class="form-group col-2"px-1>
+                    <span>Graph title: </span>
+                </div>
+                <div class="form-group col-10">
+                    <input type="text" class="col-9" id="params-graph-title" name="params-graph-title" 
+                        placeholder="Title of the graph">            
+                </div>
+            </div>          
+            <div class="form-row plot-params">
+                <div class="form-group col-2"px-1>
+                    <span>Label for axis of values: </span>
+                </div>
+                <div class="form-group col-10">
+                    <input type="text" class="col-9" id="params-axis-label" name="params-axis-label" 
+                        placeholder="Label for axis of average relative fold change(s) in gene transcription between Tx and Ctrl groups">            
+                </div>
+            </div>          
+            <div class="form-row plot-params">
+                <div class="form-group col-2"px-1>
+                    <span>Break thold: </span>
+                </div>
+                <div class="form-group col-10">
+                    <input type="text" class="col-9" id="params-break-thold" name="params-break-thold" 
+                        placeholder="Threshold of fold changes in between two adjacent bars to be considered for axis break">            
+                </div>
+            </div>     
+            <div class="form-row plot-params">
+                <div class="form-group col-2"px-1>
+                    <span>Alpha transparency: </span>
+                </div>
+                <div class="form-group col-10">
+                    <input type="number" class="col-9" id="params-alpha-transparency" name="params-alpha-transparency" step="any"
+                        placeholder="Alpha transparency of bar color (between 0 and 1)">            
+                </div>
+            </div> 
+            <div class="form-row plot-params">
+                <div class="form-group col-2"px-1>
+                    <span>Capsize: </span>
+                </div>
+                <div class="form-group col-10">
+                    <input type="number" class="col-9" id="params-capsize" name="params-capsize" min="0" step="any"
+                        placeholder="Capsize of error bar">            
+                </div>
+            </div> 
+            <div class="form-row plot-params">
+                <div class="form-group col-2"px-1>
+                    <span>Legend loc: </span>
+                </div>
+                <div class="form-group col-10">
+                    <input type="number" class="col-9" id="params-legend" name="params-legend" min="0" max="10" step="1"
+                        placeholder="Location of legend">            
+                </div>
+            </div>                                      
+            <div class="d-flex flex-row-reverse">
+                <button type="submit" id="form-submit" class="btn btn-warning font-weight-bold">Submit</button>              
+            </div>
+        </form>
+
+        <img class="bar-graph hidden" src="/qPCR" alt="Bar graph">
+    <!-- D3 -->
+    <script src="https://d3js.org/d3.v5.min.js"></script>
+    <!-- External JavaScript -->
+    <script src="{{ url_for('static', filename='js/app.js') }}"></script>  
+    </body>
+</html>
