@@ -66,7 +66,7 @@ d3.select("#params-sample-groups").on("change", function() {
 
         sampleGroupColors.append('label')
             .attr("for", `params-bar-color-${i}`)
-            .attr("class", "px-1 mb-3")
+            .attr("class", "individual-bar-color px-1 mb-3")
             .text(`Bar color-${i}`);
 
         sampleGroupColors.append('span')

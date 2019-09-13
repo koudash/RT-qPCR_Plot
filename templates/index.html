@@ -61,7 +61,7 @@
                         placeholder="Name of reference gene" required>
                 </div>
                 <div class="form-group col-4">
-                    <label class="mb-2" for="file-ctrl-gene">Ctrl group</label>
+                    <label class="mb-2" for="file-ctrl-group">Ctrl group</label>
                     <input type="text" class="form-control file-ctrl-group py-1" id="file-ctrl-group" name="file-ctrl-group" 
                         placeholder="Name of control group" required>               
                 </div>
@@ -78,91 +78,111 @@
                 </p>
             </div>              
             <div class="form-row plot-params px-2">
-                <div class="form-group col-2 px-1">
+                <!-- <div class="form-group col-2 px-1">
                     <span>No. of sample groups: </span>
-                </div>
-                <div class="form-group col-9">
-                    <input type="number" class="col-5" id="params-sample-groups" name="params-sample-groups" min="1" step="1" 
+                </div> -->
+                <div class="form-group col-10">
+                    <label for="params-sample-groups">No. of sample groups: </label>
+                    <br>
+                    <input type="number" class="form-control col-9" id="params-sample-groups" name="params-sample-groups" min="1" step="1" 
                         placeholder="Quantity of sample groups for bar plot">            
                 </div>
             </div>
             <div class="form-row plot-params params-sort px-2">
-                <div class="form-group col-2"px-1>
+                <!-- <div class="form-group col-2"px-1>
                     <span>Bar sorting: </span>
-                </div>
+                </div> -->
                 <div class="form-group col-9">
+                    <label for="params-sort">Bar sorting: </label>
+                    <br>
                     &emsp;
-                    <input type="radio" name="params-sort" value="alphabet_asc"> alphabet_asc&emsp;&emsp;
-                    <input type="radio" name="params-sort" value="alphabet_desc"> alphabet_desc&emsp;&emsp;
-                    <span class="sort-values hidden"><input type="radio" name="params-sort" value="value_asc"> value_asc&emsp;&emsp;</span>
-                    <span class="sort-values hidden"><input type="radio" name="params-sort" value="value_desc"> value_desc</span>                    
+                    <input type="radio" id="params-sort" name="params-sort" value="alphabet_asc"> alphabet_asc&emsp;&emsp;
+                    <input type="radio" id="params-sort" name="params-sort" value="alphabet_desc"> alphabet_desc&emsp;&emsp;
+                    <span class="sort-values hidden"><input type="radio" id="params-sort" name="params-sort" value="value_asc"> value_asc&emsp;&emsp;</span>
+                    <span class="sort-values hidden"><input type="radio" id="params-sort" name="params-sort" value="value_desc"> value_desc</span>                    
                 </div>
             </div>   
             <div class="form-row plot-params params-total-bars px-2">
-                <div class="form-group col-2"px-1>
+                <!-- <div class="form-group col-2"px-1>
                     <span>Total bar thold for h-plot: </span>
-                </div>
+                </div> -->
                 <div class="form-group col-9">
-                    <input type="number" class="col-5" id="params-total-bars" name="params-total-bars" min="1" step="1" 
+                    <label for="params-total-bars">Total bar thold for h-plot: </label>
+                    <br>
+                    <input type="number" class="form-control col-10" id="params-total-bars" name="params-total-bars" min="1" step="1" 
                         placeholder="Threshold of bar ct for horizontal plot">            
                 </div>
             </div>
             <div class="form-row plot-params px-2">
-                <div class="form-group col-2"px-1>
+                <!-- <div class="form-group col-2"px-1>
                     <span>Graph title: </span>
-                </div>
+                </div> -->
                 <div class="form-group col-10">
-                    <input type="text" class="col-9" id="params-graph-title" name="params-graph-title" 
+                    <label for="params-graph-title">Graph title: </label>
+                    <br>
+                    <input type="text" class="form-control col-9" id="params-graph-title" name="params-graph-title" 
                         placeholder="Title of the graph">            
                 </div>
             </div>          
             <div class="form-row plot-params px-2">
-                <div class="form-group col-2"px-1>
+                <!-- <div class="form-group col-2"px-1>
                     <span>Label for axis of values: </span>
-                </div>
+                </div> -->
                 <div class="form-group col-10">
-                    <input type="text" class="col-9" id="params-axis-label" name="params-axis-label" 
+                    <label for="params-axis-label">Label for axis of values: </label>
+                    <br>
+                    <input type="text" class="form-control col-9" id="params-axis-label" name="params-axis-label" 
                         placeholder="Label for axis of average relative fold change(s) in gene transcription between Tx and Ctrl groups">            
                 </div>
             </div>          
             <div class="form-row plot-params px-2">
-                <div class="form-group col-2"px-1>
+                <!-- <div class="form-group col-2"px-1>
                     <span>Break thold: </span>
-                </div>
+                </div> -->
                 <div class="form-group col-10">
-                    <input type="text" class="col-9" id="params-break-thold" name="params-break-thold" 
+                    <lable for="params-break-thold">Break thold: </lable>
+                    <br>
+                    <input type="text" class="form-control col-9" id="params-break-thold" name="params-break-thold" 
                         placeholder="Threshold of fold changes in between two adjacent bars to be considered for axis break">            
                 </div>
             </div>     
             <div class="form-row plot-params px-2">
-                <div class="form-group col-2"px-1>
+                <!-- <div class="form-group col-2"px-1>
                     <span>Alpha transparency: </span>
-                </div>
+                </div> -->
                 <div class="form-group col-10">
-                    <input type="number" class="col-9" id="params-alpha-transparency" name="params-alpha-transparency" step="any"
+                    <lable for="params-alpha-transparency">Alpha transparency: </lable>
+                    <br>
+                    <input type="number" class="form-control col-9" id="params-alpha-transparency" name="params-alpha-transparency" step="any"
                         placeholder="Alpha transparency of bar color (between 0 and 1)">            
                 </div>
             </div> 
             <div class="form-row plot-params px-2">
-                <div class="form-group col-2"px-1>
+                <!-- <div class="form-group col-2"px-1>
                     <span>Capsize: </span>
-                </div>
+                </div> -->
                 <div class="form-group col-10">
-                    <input type="number" class="col-9" id="params-capsize" name="params-capsize" min="0" step="any"
+                    <label for="params-capsize">Capsize: </label>
+                    <br>
+                    <input type="number" class="form-control col-9" id="params-capsize" name="params-capsize" min="0" step="any"
                         placeholder="Capsize of error bar">            
                 </div>
             </div> 
             <div class="form-row plot-params px-2">
-                <div class="form-group col-2"px-1>
+                <!-- <div class="form-group col-2"px-1>
                     <span>Legend loc: </span>
-                </div>
+                </div> -->
                 <div class="form-group col-10">
-                    <input type="number" class="col-9" id="params-legend" name="params-legend" min="0" max="10" step="1"
+                    <label for="params-legend">Legend loc: </label>
+                    <br>
+                    <input type="number" class="form-control col-9" id="params-legend" name="params-legend" min="0" max="10" step="1"
                         placeholder="Location of legend">            
                 </div>
             </div>                                      
             <div class="d-flex flex-row-reverse pr-2 pb-2">
-                <button type="submit" id="form-submit" class="btn btn-warning font-weight-bold">Plot</button>              
+                <button type="submit" id="form-submit" class="btn btn-plot font-weight-bold">
+                    <span class="btn-plot-text">Plot</span>
+                </button>              
             </div>
         </form>
 

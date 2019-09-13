@@ -34,6 +34,13 @@ form {
     animation-iteration-count: infinite;        
 }
 
+.btn-plot-text {
+    will-change: color;
+    animation-name: color-ori;
+    animation-duration: 11s;
+    animation-iteration-count: infinite;        
+}
+
 @keyframes color-ori {
     0%   {
         color: #ff0000;
@@ -71,6 +78,13 @@ form {
 }
 
 .navbar-brand {
+    will-change: color;
+    animation-name: color-inverted;
+    animation-duration: 11s;
+    animation-iteration-count: infinite;        
+}
+
+.btn-plot {
     will-change: color;
     animation-name: color-inverted;
     animation-duration: 11s;
@@ -126,11 +140,13 @@ form {
 }
 
 .input-optional {
-    color: #5BC0DE;
+    /* color: #5BC0DE; */
+    color: #FFF380;
 }
 
 .form-group input:optional {
-    border-left-color: #81D4FA;
+    /* border-left-color: #81D4FA; */
+    border-left-color: #FFF380;
     border-left-width: 4px;
 }
 
@@ -144,3 +160,14 @@ form {
     border-left-width: 4px;
 }
 
+.individual-bar-color {
+    color: #CCCCCC;
+}
+
+.params-sort:checked {
+    color: #CCCCCC;
+}
+
+input[type=text]:focus {
+    width: 250px;
+  }
