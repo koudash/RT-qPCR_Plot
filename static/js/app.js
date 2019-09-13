@@ -105,6 +105,28 @@ d3.select("#form-submit").on("click", function() {
 
 });
 
+// https://stackoverflow.com/questions/13098863/fold-div-on-click
 $(".collapse-icon").click(function() {
     $(".optional-form-group").toggle(500);
+});
+
+
+let fileUpload = d3.select(".file-sel");
+
+if (fileUpload.node().value === "") {
+    fileUpload.style("color", "salmon");
+} else {
+    fileUpload.style("color", "black");
+}
+
+d3.select(".file-sel").on("change", function() {
+
+    let fileUpload = d3.select(".file-sel");
+
+    if (fileUpload.node().value === "") {
+        fileUpload.style("color", "salmon");
+    } else {
+        fileUpload.style("color", "black");
+    }
+
 });
