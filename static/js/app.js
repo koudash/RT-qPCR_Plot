@@ -9,7 +9,7 @@ d3.select("#file-add").on("click", function() {
         .insert('div', ".but-bottom")
         .attr("class", "form-row upload-row px-2");
     newFormRow.append('div')
-        .attr("class", "form-group col-4")
+        .attr("class", "form-group col-3")
         .append('input')
         .attr("type", "file")
         .attr("class", "form-control required-form-control file-sel py-1")
@@ -35,6 +35,10 @@ d3.select("#file-add").on("click", function() {
         .attr("name", "file-ctrl-group")
         .attr("placeholder", "Name of control group")
         .attr("required", true);
+    newFormRow.append('div')
+        .attr("class", "form-group col-1")
+        .append('i')
+        .attr("class", "fas fa-minus-circle mt-2 pt-1");
     
         // Note that event listeners for row deletion and text color change have to be updated once new row is added
         // Delete row once "delete" icon is clicked
