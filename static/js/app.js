@@ -82,18 +82,13 @@ d3.select("#params-sample-groups").on("change", function() {
 
     }
 
-    if (sampleGroupsNum == 2) {
-
-       
+    if (sampleGroupsNum == 2) {       
 
         d3.selectAll(".sort-values").attr("class", "sort-values shown");
     } else {
        
         d3.selectAll(".sort-values").attr("class", "sort-values hidden");
     }
-
-
-
 
 });
 
@@ -105,28 +100,24 @@ d3.select("#form-submit").on("click", function() {
 
 });
 
-// https://stackoverflow.com/questions/13098863/fold-div-on-click
-$(".collapse-icon").click(function() {
+// Event listener for optional inputs
+$(".form-subheader-2").click(function() {
+    // Toggling to decompress/collapse optional inputs
+    // https://stackoverflow.com/questions/13098863/fold-div-on-click
     $(".optional-form-group").toggle(500);
+    // Toggling between "up" and "down" icons
+    $(".fa-angle-double-down").toggleClass("fa-angle-double-up");
 });
 
 
-let fileUpload = d3.select(".file-sel");
-
-if (fileUpload.node().value === "") {
-    fileUpload.style("color", "salmon");
-} else {
-    fileUpload.style("color", "black");
-}
-
 d3.select(".file-sel").on("change", function() {
 
-    let fileUpload = d3.select(".file-sel");
+    this.style.color = "palegreen";
 
-    if (fileUpload.node().value === "") {
-        fileUpload.style("color", "salmon");
-    } else {
-        fileUpload.style("color", "black");
-    }
+});
+
+d3.selectAll(".required-form-control").on("change", function() {
+
+    this.style.color = "palegreen";
 
 });

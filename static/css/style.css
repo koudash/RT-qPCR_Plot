@@ -150,6 +150,10 @@ form {
     border-left-width: 4px;
 }
 
+.form-group input:optional:focus {
+    border-color: #FFF380;
+}
+
 .form-group input:required {
     border-left-color: palegreen;
     border-left-width: 4px;
@@ -172,6 +176,8 @@ form {
     width: 250px;
   } */
 
+
+
 .collapse-icon {
     position: relative;
     right: 0;
@@ -186,9 +192,9 @@ form {
     color: silver;
 }
 
-/* .file-sel {
+.file-sel {
     color: salmon;
-} */
+}
 
 .required-form-control::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
     color: salmon;
@@ -202,3 +208,5 @@ form {
   ::-ms-input-placeholder { /* Microsoft Edge */
     color: salmon;
   }
+
+  
