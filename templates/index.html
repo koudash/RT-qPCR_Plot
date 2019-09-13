@@ -32,13 +32,13 @@
     <body>
         <nav class="navbar navbar-expand-sm navbar-light py-0">
             <a class="navbar-brand ml-3 mr-0 px-3" href="#">
-                    <span class="text-white brand">RT-qPCR |</span>
-                    <span class="change-color">
-                        &ensp;Turn 
-                        <i class="fas fa-dna change-color-f"></i>
-                         into 
-                        <i class="far fa-chart-bar change-color-r"></i>
-                    </span>
+                <span class="text-white brand">RT-qPCR |</span>
+                <span class="brand-change-color">
+                    &ensp;Turn 
+                    <i class="fas fa-dna"></i>
+                        into 
+                    <i class="far fa-chart-bar"></i>
+                </span>
             </a>
         </nav>
         <!-- https://stackoverflow.com/questions/24112564/request-files-getlistfile-is-empty -->
@@ -56,7 +56,7 @@
                     <input type="file" class="form-control required-form-control file-sel py-1" id="file-sel" name="file-sel" accept=".csv" required>                          
                 </div>
                 <div class="form-group col-4">
-                    <label class="mb-2" for="file-ref-gene">Ref Gene</label>
+                    <label class="mb-2" for="file-ref-gene">Ref gene</label>
                     <input type="text" class="form-control required-form-control file-ref-gene py-1" id="file-ref-gene" name="file-ref-gene" 
                         placeholder="Name of reference gene" required>
                 </div>
@@ -79,9 +79,6 @@
                 <span class="collapse-icon ml-3"><i class="fas fa-angle-double-down"></i></span>
             </div>              
             <div class="form-row plot-params px-2">
-                <!-- <div class="form-group col-2 px-1">
-                    <span>No. of sample groups: </span>
-                </div> -->
                 <div class="form-group optional-form-group col-10">
                     <label for="params-sample-groups">No. of sample groups: </label>
                     <br>
@@ -90,9 +87,6 @@
                 </div>
             </div>
             <div class="form-row plot-params params-sort px-2">
-                <!-- <div class="form-group optional-form-group col-2"px-1>
-                    <span>Bar sorting: </span>
-                </div> -->
                 <div class="form-group optional-form-group col-9">
                     <label for="params-sort">Bar sorting: </label>
                     <br>
@@ -104,9 +98,6 @@
                 </div>
             </div>   
             <div class="form-row plot-params params-total-bars px-2">
-                <!-- <div class="form-group optional-form-group col-2"px-1>
-                    <span>Total bar thold for h-plot: </span>
-                </div> -->
                 <div class="form-group optional-form-group col-9">
                     <label for="params-total-bars">Total bar thold for h-plot: </label>
                     <br>
@@ -115,9 +106,6 @@
                 </div>
             </div>
             <div class="form-row plot-params px-2">
-                <!-- <div class="form-group optional-form-group col-2"px-1>
-                    <span>Graph title: </span>
-                </div> -->
                 <div class="form-group optional-form-group col-10">
                     <label for="params-graph-title">Graph title: </label>
                     <br>
@@ -126,9 +114,6 @@
                 </div>
             </div>          
             <div class="form-row plot-params px-2">
-                <!-- <div class="form-group optional-form-group col-2"px-1>
-                    <span>Label for axis of values: </span>
-                </div> -->
                 <div class="form-group optional-form-group col-10">
                     <label for="params-axis-label">Label for axis of values: </label>
                     <br>
@@ -137,9 +122,6 @@
                 </div>
             </div>          
             <div class="form-row plot-params px-2">
-                <!-- <div class="form-group optional-form-group col-2"px-1>
-                    <span>Break thold: </span>
-                </div> -->
                 <div class="form-group optional-form-group col-10">
                     <lable for="params-break-thold">Break thold: </lable>
                     <br>
@@ -148,9 +130,6 @@
                 </div>
             </div>     
             <div class="form-row plot-params px-2">
-                <!-- <div class="form-group optional-form-group col-2"px-1>
-                    <span>Alpha transparency: </span>
-                </div> -->
                 <div class="form-group optional-form-group col-10">
                     <lable for="params-alpha-transparency">Alpha transparency: </lable>
                     <br>
@@ -159,9 +138,6 @@
                 </div>
             </div> 
             <div class="form-row plot-params px-2">
-                <!-- <div class="form-group optional-form-group col-2"px-1>
-                    <span>Capsize: </span>
-                </div> -->
                 <div class="form-group optional-form-group col-10">
                     <label for="params-capsize">Capsize: </label>
                     <br>
@@ -170,9 +146,6 @@
                 </div>
             </div> 
             <div class="form-row plot-params px-2">
-                <!-- <div class="form-group optional-form-group col-2"px-1>
-                    <span>Legend loc: </span>
-                </div> -->
                 <div class="form-group optional-form-group col-10">
                     <label for="params-legend">Legend loc: </label>
                     <br>
@@ -186,8 +159,21 @@
                 </button>              
             </div>
         </form>
-
         <img class="bar-graph hidden" src="/qPCR" alt="Bar graph">
+        <div class='footer w-100 text-center font-weight-bold'>
+            <p class='my-0 p-2'>
+                <span>A Lei Kang's Application</span>
+                <a href="https://koudash.github.io/" alt="Profile" target="_blank">
+                    <img class="ml-2 contact" src="/static/images/Myself.png" alt="Profile" width=25>
+                </a>
+                <a href="https://github.com/koudash/" alt="Github" target="_blank">
+                    <img class="ml-2 contact" src="/static/images/Github.png" alt="Github" width=25>
+                </a>                                
+                <a href="mailto:koudash@gmail.com" alt="Gmail" target="_blank">
+                    <img class="ml-2 contact" src="/static/images/Gmail.png" alt="Email" width=25>
+                </a>
+            </p>
+        </div>        
     <!-- D3 -->
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <!-- External JavaScript -->

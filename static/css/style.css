@@ -2,6 +2,16 @@ body {
     background-color: silver;
 }
 
+.navbar {
+    border-radius: 0;
+    border-width: 0;
+    background-color: #303030;
+}
+
+.brand {
+    color: white;
+}
+
 form {
     background-color: #707070;
 }
@@ -23,11 +33,7 @@ form {
     font-size: 20px;
 }
 
-.brand {
-    color: white;
-}
-
-.change-color {
+.brand-change-color {
     will-change: color;
     animation-name: color-ori;
     animation-duration: 11s;
@@ -127,75 +133,10 @@ form {
     }    
 }
 
-.hidden {
-    visibility: hidden;
-}
-
-.shown {
-    visibility: visible;
-}
-
-.input-required {
-    color: #5CB85C;
-}
-
-.input-optional {
-    /* color: #5BC0DE; */
-    color: #FFF380;
-}
-
-.form-group input:optional {
-    /* border-left-color: #81D4FA; */
-    border-left-color: #FFF380;
-    border-left-width: 4px;
-}
-
-.form-group input:optional:focus {
-    border-color: #FFF380;
-}
-
-.form-group input:required {
-    border-left-color: palegreen;
-    border-left-width: 4px;
-}
-
-.form-group input:invalid {
-    border-left-color: salmon;
-    border-left-width: 4px;
-}
-
-.individual-bar-color {
-    color: #CCCCCC;
-}
-
-.params-sort:checked {
-    color: #CCCCCC;
-}
-
-/* input[type=text]:focus {
-    width: 250px;
-  } */
-
-
-
-.collapse-icon {
-    position: relative;
-    right: 0;
-    overflow: none;
-}
-
-.optional-form-group {
-    display: none;
-}
-
-.fa-angle-double-down {
-    color: silver;
-}
-
+/* Color of invalid input text (including placeholder) is set to salmon by default */
 .file-sel {
     color: salmon;
 }
-
 .required-form-control::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
     color: salmon;
     opacity: 1; /* Firefox */
@@ -209,4 +150,63 @@ form {
     color: salmon;
   }
 
-  
+.input-required {
+    color: #5CB85C;
+}
+
+.input-optional {
+    color: #FFF380;
+}
+
+/* https://alligator.io/css/styling-form-input-validity/ */
+.form-group input:optional {
+    border-left-color: #FFF380;
+    border-left-width: 4px;
+}
+
+.form-group input:optional:focus {
+    border-color: #FFF380;
+}
+
+.form-group input:required {
+    border-left-color: #5CB85C;
+    border-left-width: 4px;
+}
+
+.form-group input:invalid {
+    border-left-color: salmon;
+    border-left-width: 4px;
+}
+
+.hidden {
+    visibility: hidden;
+}
+
+.shown {
+    visibility: visible;
+}
+
+.individual-bar-color {
+    color: #CCCCCC;
+}
+
+.fa-angle-double-down {
+    color: silver;
+}
+
+/* Optional input is set as not displayed by default */
+.optional-form-group {
+    display: none;
+}
+
+.footer {
+    position: fixed;
+    bottom: 0;
+    background-color: #303030;
+    color: white;
+    letter-spacing: 2px;
+}
+
+.contact {
+    border-radius: 3px;
+}
