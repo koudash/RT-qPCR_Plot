@@ -104,3 +104,7 @@ d3.select("#form-submit").on("click", function() {
         .attr("class", "bar-graph shown");
 
 });
+
+$(".collapse-icon").click(function() {
+    $(".optional-form-group").toggle(500);
+});

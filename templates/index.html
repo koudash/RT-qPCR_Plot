@@ -71,17 +71,18 @@
                 <button type="button" id="file-add" class="btn btn-outline-success font-weight-bold">Add Data</button>
             </div>
             <div class="form-subheader-2 p-2 my-4">
-                <p class="subheader-text my-0">
+                <span class="subheader-text my-0">
                     Plot params (
                     <span class="input-optional">optional</span>
                     )
-                </p>
+                </span>
+                <span class="collapse-icon ml-3"><i class="fas fa-angle-double-down"></i></span>
             </div>              
             <div class="form-row plot-params px-2">
                 <!-- <div class="form-group col-2 px-1">
                     <span>No. of sample groups: </span>
                 </div> -->
-                <div class="form-group col-10">
+                <div class="form-group optional-form-group col-10">
                     <label for="params-sample-groups">No. of sample groups: </label>
                     <br>
                     <input type="number" class="form-control col-9" id="params-sample-groups" name="params-sample-groups" min="1" step="1" 
@@ -89,10 +90,10 @@
                 </div>
             </div>
             <div class="form-row plot-params params-sort px-2">
-                <!-- <div class="form-group col-2"px-1>
+                <!-- <div class="form-group optional-form-group col-2"px-1>
                     <span>Bar sorting: </span>
                 </div> -->
-                <div class="form-group col-9">
+                <div class="form-group optional-form-group col-9">
                     <label for="params-sort">Bar sorting: </label>
                     <br>
                     &emsp;
@@ -103,10 +104,10 @@
                 </div>
             </div>   
             <div class="form-row plot-params params-total-bars px-2">
-                <!-- <div class="form-group col-2"px-1>
+                <!-- <div class="form-group optional-form-group col-2"px-1>
                     <span>Total bar thold for h-plot: </span>
                 </div> -->
-                <div class="form-group col-9">
+                <div class="form-group optional-form-group col-9">
                     <label for="params-total-bars">Total bar thold for h-plot: </label>
                     <br>
                     <input type="number" class="form-control col-10" id="params-total-bars" name="params-total-bars" min="1" step="1" 
@@ -114,10 +115,10 @@
                 </div>
             </div>
             <div class="form-row plot-params px-2">
-                <!-- <div class="form-group col-2"px-1>
+                <!-- <div class="form-group optional-form-group col-2"px-1>
                     <span>Graph title: </span>
                 </div> -->
-                <div class="form-group col-10">
+                <div class="form-group optional-form-group col-10">
                     <label for="params-graph-title">Graph title: </label>
                     <br>
                     <input type="text" class="form-control col-9" id="params-graph-title" name="params-graph-title" 
@@ -125,10 +126,10 @@
                 </div>
             </div>          
             <div class="form-row plot-params px-2">
-                <!-- <div class="form-group col-2"px-1>
+                <!-- <div class="form-group optional-form-group col-2"px-1>
                     <span>Label for axis of values: </span>
                 </div> -->
-                <div class="form-group col-10">
+                <div class="form-group optional-form-group col-10">
                     <label for="params-axis-label">Label for axis of values: </label>
                     <br>
                     <input type="text" class="form-control col-9" id="params-axis-label" name="params-axis-label" 
@@ -136,10 +137,10 @@
                 </div>
             </div>          
             <div class="form-row plot-params px-2">
-                <!-- <div class="form-group col-2"px-1>
+                <!-- <div class="form-group optional-form-group col-2"px-1>
                     <span>Break thold: </span>
                 </div> -->
-                <div class="form-group col-10">
+                <div class="form-group optional-form-group col-10">
                     <lable for="params-break-thold">Break thold: </lable>
                     <br>
                     <input type="text" class="form-control col-9" id="params-break-thold" name="params-break-thold" 
@@ -147,10 +148,10 @@
                 </div>
             </div>     
             <div class="form-row plot-params px-2">
-                <!-- <div class="form-group col-2"px-1>
+                <!-- <div class="form-group optional-form-group col-2"px-1>
                     <span>Alpha transparency: </span>
                 </div> -->
-                <div class="form-group col-10">
+                <div class="form-group optional-form-group col-10">
                     <lable for="params-alpha-transparency">Alpha transparency: </lable>
                     <br>
                     <input type="number" class="form-control col-9" id="params-alpha-transparency" name="params-alpha-transparency" step="any"
@@ -158,10 +159,10 @@
                 </div>
             </div> 
             <div class="form-row plot-params px-2">
-                <!-- <div class="form-group col-2"px-1>
+                <!-- <div class="form-group optional-form-group col-2"px-1>
                     <span>Capsize: </span>
                 </div> -->
-                <div class="form-group col-10">
+                <div class="form-group optional-form-group col-10">
                     <label for="params-capsize">Capsize: </label>
                     <br>
                     <input type="number" class="form-control col-9" id="params-capsize" name="params-capsize" min="0" step="any"
@@ -169,10 +170,10 @@
                 </div>
             </div> 
             <div class="form-row plot-params px-2">
-                <!-- <div class="form-group col-2"px-1>
+                <!-- <div class="form-group optional-form-group col-2"px-1>
                     <span>Legend loc: </span>
                 </div> -->
-                <div class="form-group col-10">
+                <div class="form-group optional-form-group col-10">
                     <label for="params-legend">Legend loc: </label>
                     <br>
                     <input type="number" class="form-control col-9" id="params-legend" name="params-legend" min="0" max="10" step="1"

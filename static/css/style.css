@@ -168,6 +168,20 @@ form {
     color: #CCCCCC;
 }
 
-input[type=text]:focus {
+/* input[type=text]:focus {
     width: 250px;
-  }
+  } */
+
+.collapse-icon {
+    position: relative;
+    right: 0;
+    overflow: none;
+}
+
+.optional-form-group {
+    display: none;
+}
+
+.fa-angle-double-down {
+    color: silver;
+}
