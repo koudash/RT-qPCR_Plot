@@ -12,9 +12,9 @@ is returned as output of the function.
 # Function to read ".csv" file(s) and generate bar graph accordingly
 def qPCR_plot(
     file_list, ref_list, ctrl_list, bar_color, 
-    sort_by="alphabet_asc", thold_hbar_ct=30, title="qPCR",
-    value_label="Avg. Rel. Tx/Ctrl", break_thold=10, alpha=0.5, 
-    capsize=4, legend_loc="0"):
+    ct_repeat, sort_by="alphabet_asc", thold_hbar_ct=30, 
+    title="qPCR", value_label="Avg. Rel. Tx/Ctrl", break_thold=10, 
+    alpha=0.5, capsize=4, legend_loc="0"):
 
     # ***************************************** #
     #               DATA READ-IN                #
@@ -47,33 +47,36 @@ def qPCR_plot(
         # Typecast value in "CT" column as float
         df["CT"] = df["CT"].astype(float)
 
-        # >>>>>>>>>> Removal of ct outliers <<<<<<<<<< #
-        # List to hold index of outliers in "CT" column
-        outlier_index = []
+        # Check if outlier removal is needed
+        if ct_repeat == 3:
 
-        # Note that the default parallel repeat for each target name is 3
-        # Loop through the first repeated ct value of "df"
-        for i in range(0, len(df), 3):
-            # Save 3 repeated ct values in ascending order in "ct_list"
-            ct_list = sorted([df["CT"][i], df["CT"][i + 1], df["CT"][i + 2]])
-            # Calculate the distance in between each value in "ct_list"
-            delta_upper = ct_list[2] - ct_list[1]
-            delta_lower = ct_list[1] - ct_list[0]
-            # Since there are only 3 parallel ct values, consider the most distant one as potential outlier
-            if delta_upper > delta_lower:
-                # delta ct = 1 (2 folds) is set as the threshold for determining outlier ct value
-                if delta_upper > 1:
-                    # Append index of the maximum ct value to "outlier_index"
-                    [outlier_index.append(i + j) for j in range(3) if df["CT"][i + j] == ct_list[2]]
-            else:
-                if delta_lower > 1:
-                    # Append index of the minimum ct value to "outlier_index"
-                    [outlier_index.append(i + j) for j in range(3) if df["CT"][i + j] == ct_list[0]]
+            # >>>>>>>>>> Removal of ct outliers <<<<<<<<<< #
+            # List to hold index of outliers in "CT" column
+            outlier_index = []
 
-        # Drop rows with outlier ct values
-        df = df.drop(outlier_index)
-        # Reset index of "df"
-        df.reset_index(drop=True, inplace=True)
+            # Note that the default parallel repeat for each target name is 3
+            # Loop through the first repeated ct value of "df"
+            for i in range(0, len(df), 3):
+                # Save 3 repeated ct values in ascending order in "ct_list"
+                ct_list = sorted([df["CT"][i], df["CT"][i + 1], df["CT"][i + 2]])
+                # Calculate the distance in between each value in "ct_list"
+                delta_upper = ct_list[2] - ct_list[1]
+                delta_lower = ct_list[1] - ct_list[0]
+                # Since there are only 3 parallel ct values, consider the most distant one as potential outlier
+                if delta_upper > delta_lower:
+                    # delta ct = 1 (2 folds) is set as the threshold for determining outlier ct value
+                    if delta_upper > 1:
+                        # Append index of the maximum ct value to "outlier_index"
+                        [outlier_index.append(i + j) for j in range(3) if df["CT"][i + j] == ct_list[2]]
+                else:
+                    if delta_lower > 1:
+                        # Append index of the minimum ct value to "outlier_index"
+                        [outlier_index.append(i + j) for j in range(3) if df["CT"][i + j] == ct_list[0]]
+
+            # Drop rows with outlier ct values
+            df = df.drop(outlier_index)
+            # Reset index of "df"
+            df.reset_index(drop=True, inplace=True)
 
         # >>>>>>>>>> Column calc in "df" <<<<<<<<<< #
         # ..... 1. "Target/Ref" column ..... #

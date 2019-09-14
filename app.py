@@ -41,6 +41,7 @@ def data_proc_plot():
     
     # Default values of variables for bar plot
     params_dict = {
+        "file-repeat": 3,
         "params-sort": "alphabet_asc",
         "params-sample-groups": color_dict,
         "params-total-bars": 30,
@@ -73,7 +74,8 @@ def data_proc_plot():
 
     # Call "qPCR_plot()" function to generate bar graph and save it as "fig"
     fig = qPCR_plot(
-        file_list=file_list, ref_list=ref_list, ctrl_list=ctrl_list, bar_color=params_dict["params-sample-groups"], 
+        file_list=file_list, ref_list=ref_list, ctrl_list=ctrl_list, 
+        ct_repeat=params_dict["file-repeat"], bar_color=params_dict["params-sample-groups"], 
         sort_by=params_dict["params-sort"], thold_hbar_ct=params_dict["params-total-bars"], 
         title=params_dict["params-graph-title"], value_label=params_dict["params-axis-label"], 
         break_thold=params_dict["params-break-thold"], alpha=params_dict["params-alpha-transparency"], 

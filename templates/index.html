@@ -51,20 +51,28 @@
                 </p>
             </div>            
             <div class="form-row upload-row px-2">
-                <div class="form-group col-3">
+                <div class="form-group col-4">
                     <label class="mb-2 pl-1" for="file-sel">File</label>
                     <input type="file" class="form-control required-form-control file-sel py-1" id="file-sel" name="file-sel" accept=".csv" required>                          
                 </div>
-                <div class="form-group col-4">
-                    <label class="mb-2" for="file-ref-gene">Ref gene</label>
-                    <input type="text" class="form-control required-form-control file-ref-gene py-1" id="file-ref-gene" name="file-ref-gene" 
-                        placeholder="Name of reference gene" required>
-                </div>
-                <div class="form-group col-4">
+                <div class="form-group col-3">
                     <label class="mb-2" for="file-ctrl-group">Ctrl group</label>
                     <input type="text" class="form-control required-form-control file-ctrl-group py-1" id="file-ctrl-group" name="file-ctrl-group" 
                         placeholder="Name of control group" required>               
                 </div>
+                <div class="form-group col-3">
+                    <label class="mb-2" for="file-ref-gene">Ref gene</label>
+                    <input type="text" class="form-control required-form-control file-ref-gene py-1" id="file-ref-gene" name="file-ref-gene" 
+                        placeholder="Name of reference gene" required>
+                </div>                
+                <div class="form-group col-1">
+                    <label class="mb-2" for="file-repeat">Expt repeat</label>
+                    <select class="form-control required-form-control file-repeat py-1" id="file-repeat" name="file-repeat" required>
+                        <option value="" selected hidden>2 or 3</option>
+                        <option value="2">2</option>
+                        <option value="3">3</option>
+                    </select>
+                </div>                
             </div>
             <div class="d-flex flex-row-reverse but-bottom pr-2 pb-2">
                 <button type="reset" class="btn btn-outline-secondary font-weight-bold">Reset</button>

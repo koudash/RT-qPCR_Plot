@@ -137,6 +137,9 @@ form {
 .file-sel {
     color: salmon;
 }
+.file-repeat {
+    color: salmon;
+}
 .required-form-control::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
     color: salmon;
     opacity: 1; /* Firefox */
@@ -174,6 +177,17 @@ form {
 }
 
 .form-group input:invalid {
+    border-left-color: salmon;
+    border-left-width: 4px;
+}
+
+
+.form-group select:required {
+    border-left-color: #5CB85C;
+    border-left-width: 4px;
+}
+
+.form-group select:invalid {
     border-left-color: salmon;
     border-left-width: 4px;
 }

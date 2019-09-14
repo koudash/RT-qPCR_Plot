@@ -9,7 +9,7 @@ d3.select("#file-add").on("click", function() {
         .insert('div', ".but-bottom")
         .attr("class", "form-row upload-row px-2");
     newFormRow.append('div')
-        .attr("class", "form-group col-3")
+        .attr("class", "form-group col-4")
         .append('input')
         .attr("type", "file")
         .attr("class", "form-control required-form-control file-sel py-1")
@@ -18,16 +18,7 @@ d3.select("#file-add").on("click", function() {
         .attr("accept", ".csv")
         .attr("required", true);
     newFormRow.append('div')
-        .attr("class", "form-group col-4")
-        .append('input')
-        .attr("type", "text")
-        .attr("class", "form-control required-form-control file-ref-gene py-1")
-        .attr("id", "file-ref-gene")
-        .attr("name", "file-ref-gene")
-        .attr("placeholder", "Name of reference gene")
-        .attr("required", true);
-    newFormRow.append('div')
-        .attr("class", "form-group col-4")
+        .attr("class", "form-group col-3")
         .append('input')
         .attr("type", "text")
         .attr("class", "form-control required-form-control file-ctrl-group py-1")
@@ -36,19 +27,46 @@ d3.select("#file-add").on("click", function() {
         .attr("placeholder", "Name of control group")
         .attr("required", true);
     newFormRow.append('div')
+        .attr("class", "form-group col-3")
+        .append('input')
+        .attr("type", "text")
+        .attr("class", "form-control required-form-control file-ref-gene py-1")
+        .attr("id", "file-ref-gene")
+        .attr("name", "file-ref-gene")
+        .attr("placeholder", "Name of reference gene")
+        .attr("required", true);
+    let newSel = newFormRow.append('div')
+        .attr("class", "form-group col-1")
+        .append('select')
+        .attr("class", "form-control required-form-control file-repeat py-1")
+        .attr("id", "file-repeat")
+        .attr("name", "file-repeat")
+        .attr("required", true);
+    newSel.append('option')
+        .attr("value", "")
+        .attr("selected", true)
+        .attr("hidden", true)
+        .text("2 or 3");        
+    newSel.append('option')
+        .attr("value", "2")
+        .text("2");         
+    newSel.append('option')
+        .attr("value", "3")
+        .text("3");
+    newFormRow.append('div')
         .attr("class", "form-group col-1")
         .append('i')
         .attr("class", "fas fa-minus-circle mt-2 pt-1");
-    
-        // Note that event listeners for row deletion and text color change have to be updated once new row is added
-        // Delete row once "delete" icon is clicked
-        d3.selectAll(".fa-minus-circle").on("click", function() {
-            $(this).parents()[1].remove();
-        });
-        // Change color of texts in required input box when filled in
-        d3.selectAll(".required-form-control").on("change", function() {
-            this.style.color = "#5CB85C";
-        });
+
+    // Note that event listeners for row deletion and text color change have to be updated once new row is added
+    // Delete row once "delete" icon is clicked
+    d3.selectAll(".fa-minus-circle").on("click", function() {
+        $(this).parents()[1].remove();
+    });
+    // Change color of texts in required input box when filled in
+    d3.selectAll(".required-form-control").on("change", function() {
+        this.style.color = "#5CB85C";
+    });
         
 });
 
