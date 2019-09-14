@@ -13,3 +13,5 @@ The **2<sup>-Delta Delta CT</sup> method** is applied in comparing relative gene
 ## Bar plot
 
 There are many parameters a user can specify in order to personalize his/her final plot. By default, the bars can be arranged according to the alphabet of the names of genes in either descending or ascending order. But if there are only one control and one treatment group, sorting by values of relative activation in treatment group becomes available. After the number of sample groups is given, the user can assign bar color for each individual sample group. Also, the user can set up the minimum of total bars to be displayed if plotted horizontally. Threshold of fold change in values between two adjacent bars is used to determine if a break in the axis of values is required. It can be set up by user as well. Moreover, *graph title*, *label for axis of values*, *alpha transparency of bar color*, *cap size of error bars* (only show the large value half), and *location of legend* are all parameters the user can play with.
+
+Application is deployed on Heroku and can be accessed <a href="https://koudash-qpcr-plot.herokuapp.com/">here</a>.
