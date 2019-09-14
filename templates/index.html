@@ -49,30 +49,32 @@
                     <span class="input-required">mandatory</span>
                     )
                 </p>
-            </div>            
+            </div>
             <div class="form-row upload-row px-2">
                 <div class="form-group col-4">
                     <label class="mb-2 pl-1" for="file-sel">File</label>
-                    <input type="file" class="form-control required-form-control file-sel py-1" id="file-sel" name="file-sel" accept=".csv" required>                          
+                    <input type="file" class="form-control required-form-control file-sel py-1" id="file-sel" 
+                        name="file-sel" accept=".csv" required>
                 </div>
                 <div class="form-group col-3">
                     <label class="mb-2" for="file-ctrl-group">Ctrl group</label>
-                    <input type="text" class="form-control required-form-control file-ctrl-group py-1" id="file-ctrl-group" name="file-ctrl-group" 
-                        placeholder="Name of control group" required>               
+                    <input type="text" class="form-control required-form-control file-ctrl-group py-1" id="file-ctrl-group" 
+                        name="file-ctrl-group" placeholder="Name of control group" required>
                 </div>
                 <div class="form-group col-3">
                     <label class="mb-2" for="file-ref-gene">Ref gene</label>
-                    <input type="text" class="form-control required-form-control file-ref-gene py-1" id="file-ref-gene" name="file-ref-gene" 
-                        placeholder="Name of reference gene" required>
-                </div>                
+                    <input type="text" class="form-control required-form-control file-ref-gene py-1" id="file-ref-gene" 
+                        name="file-ref-gene" placeholder="Name of reference gene" required>
+                </div>
                 <div class="form-group col-1">
                     <label class="mb-2" for="file-repeat">Expt repeat</label>
-                    <select class="form-control required-form-control file-repeat py-1" id="file-repeat" name="file-repeat" required>
+                    <select class="form-control required-form-control file-repeat py-1" id="file-repeat" 
+                        name="file-repeat" required>
                         <option value="" selected hidden>2 or 3</option>
                         <option value="2">2</option>
                         <option value="3">3</option>
                     </select>
-                </div>                
+                </div>
             </div>
             <div class="d-flex flex-row-reverse but-bottom pr-2 pb-2">
                 <button type="reset" class="btn btn-outline-secondary font-weight-bold">Reset</button>
@@ -85,13 +87,13 @@
                     )
                 </span>
                 <span class="collapse-icon ml-3"><i class="fas fa-angle-double-down"></i></span>
-            </div>              
+            </div>
             <div class="form-row plot-params px-2">
                 <div class="form-group optional-form-group col-10">
                     <label for="params-sample-groups">No. of sample groups: </label>
                     <br>
-                    <input type="number" class="form-control col-9" id="params-sample-groups" name="params-sample-groups" min="1" step="1" 
-                        placeholder="Quantity of sample groups for bar plot">            
+                    <input type="number" class="form-control col-9" id="params-sample-groups" name="params-sample-groups" 
+                        min="1" step="1" placeholder="Quantity of sample groups for bar plot">
                 </div>
             </div>
             <div class="form-row plot-params params-sort px-2">
@@ -101,16 +103,18 @@
                     &emsp;
                     <input type="radio" id="params-sort" name="params-sort" value="alphabet_asc"> alphabet_asc&emsp;&emsp;
                     <input type="radio" id="params-sort" name="params-sort" value="alphabet_desc"> alphabet_desc&emsp;&emsp;
-                    <span class="sort-values hidden"><input type="radio" id="params-sort" name="params-sort" value="value_asc"> value_asc&emsp;&emsp;</span>
-                    <span class="sort-values hidden"><input type="radio" id="params-sort" name="params-sort" value="value_desc"> value_desc</span>                    
+                    <span class="sort-values hidden"><input type="radio" id="params-sort" name="params-sort" value="value_asc">
+                         value_asc&emsp;&emsp;</span>
+                    <span class="sort-values hidden"><input type="radio" id="params-sort" name="params-sort" value="value_desc">
+                         value_desc</span>
                 </div>
             </div>   
             <div class="form-row plot-params params-total-bars px-2">
                 <div class="form-group optional-form-group col-9">
                     <label for="params-total-bars">Total bar thold for h-plot: </label>
                     <br>
-                    <input type="number" class="form-control col-10" id="params-total-bars" name="params-total-bars" min="1" step="1" 
-                        placeholder="Threshold of bar ct for horizontal plot">            
+                    <input type="number" class="form-control col-10" id="params-total-bars" name="params-total-bars" 
+                        min="1" step="1" placeholder="Threshold of bar ct for horizontal plot">
                 </div>
             </div>
             <div class="form-row plot-params px-2">
@@ -118,53 +122,55 @@
                     <label for="params-graph-title">Graph title: </label>
                     <br>
                     <input type="text" class="form-control col-9" id="params-graph-title" name="params-graph-title" 
-                        placeholder="Title of the graph">            
+                        placeholder="Title of the graph">
                 </div>
-            </div>          
+            </div>
             <div class="form-row plot-params px-2">
                 <div class="form-group optional-form-group col-10">
                     <label for="params-axis-label">Label for axis of values: </label>
                     <br>
                     <input type="text" class="form-control col-9" id="params-axis-label" name="params-axis-label" 
-                        placeholder="Label for axis of average relative fold change(s) in gene transcription between Tx and Ctrl groups">            
+                        placeholder="Label for axis of average relative fold change(s) in gene transcription 
+                        between Tx and Ctrl groups">
                 </div>
-            </div>          
+            </div>
             <div class="form-row plot-params px-2">
                 <div class="form-group optional-form-group col-10">
                     <lable for="params-break-thold">Break thold: </lable>
                     <br>
                     <input type="text" class="form-control col-9" id="params-break-thold" name="params-break-thold" 
-                        placeholder="Threshold of fold changes in between two adjacent bars to be considered for axis break">            
+                        placeholder="Threshold of fold changes in between two adjacent bars to be considered for axis break">
                 </div>
-            </div>     
+            </div>
             <div class="form-row plot-params px-2">
                 <div class="form-group optional-form-group col-10">
                     <lable for="params-alpha-transparency">Alpha transparency: </lable>
                     <br>
-                    <input type="number" class="form-control col-9" id="params-alpha-transparency" name="params-alpha-transparency" step="any"
-                        placeholder="Alpha transparency of bar color (between 0 and 1)">            
+                    <input type="number" class="form-control col-9" id="params-alpha-transparency" 
+                        name="params-alpha-transparency" step="any" 
+                        placeholder="Alpha transparency of bar color (between 0 and 1)">
                 </div>
             </div> 
             <div class="form-row plot-params px-2">
                 <div class="form-group optional-form-group col-10">
                     <label for="params-capsize">Capsize: </label>
                     <br>
-                    <input type="number" class="form-control col-9" id="params-capsize" name="params-capsize" min="0" step="any"
-                        placeholder="Capsize of error bar">            
+                    <input type="number" class="form-control col-9" id="params-capsize" name="params-capsize" 
+                        min="0" step="any" placeholder="Capsize of error bar">
                 </div>
             </div> 
             <div class="form-row plot-params px-2">
                 <div class="form-group optional-form-group col-10">
                     <label for="params-legend">Legend loc: </label>
                     <br>
-                    <input type="number" class="form-control col-9" id="params-legend" name="params-legend" min="0" max="10" step="1"
-                        placeholder="Location of legend">            
+                    <input type="number" class="form-control col-9" id="params-legend" name="params-legend" 
+                        min="0" max="10" step="1" placeholder="Location of legend">
                 </div>
-            </div>                                      
+            </div>
             <div class="d-flex flex-row-reverse pr-2 pb-2">
                 <button type="submit" id="form-submit" class="btn btn-plot font-weight-bold">
                     <span class="btn-plot-text">PLOT</span>
-                </button>              
+                </button>
             </div>
         </form>
         <img class="bar-graph hidden" src="/qPCR" alt="Bar graph">
@@ -176,12 +182,12 @@
                 </a>
                 <a href="https://github.com/koudash/" alt="Github" target="_blank">
                     <img class="ml-2 contact" src="/static/images/Github.png" alt="Github" width=25>
-                </a>                                
+                </a>
                 <a href="mailto:koudash@gmail.com" alt="Gmail" target="_blank">
                     <img class="ml-2 contact" src="/static/images/Gmail.png" alt="Email" width=25>
                 </a>
             </p>
-        </div>        
+        </div>
     <!-- D3 -->
     <script src="https://d3js.org/d3.v5.min.js"></script>
     <!-- External JavaScript -->

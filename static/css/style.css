@@ -181,15 +181,16 @@ form {
     border-left-width: 4px;
 }
 
-
 .form-group select:required {
     border-left-color: #5CB85C;
     border-left-width: 4px;
+    border-radius: 255px 25px 225px 25px/25px 225px 25px 255px !important;     
 }
 
 .form-group select:invalid {
     border-left-color: salmon;
     border-left-width: 4px;
+    border-radius: 255px 25px 225px 25px/25px 225px 25px 255px !important;     
 }
 
 .hidden {
