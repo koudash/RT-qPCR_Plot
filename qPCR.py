@@ -247,8 +247,8 @@ def qPCR_plot(
         # Sort iterated "s_df" by "Avg. Rel. Tx/Ctrl" in ascending order, reset index, and temporarily store in "s_df_iter" variable 
         s_df_iter = s_df[s_names[i]].sort_values(by=["Avg. Rel. Tx/Ctrl"], ascending=True).reset_index(drop=True)
 
-        # Determine upper limit on axis of value for iterated "s_df" (1.5 folds of the maximum "Avg. Rel. Tx/Ctrl" value)
-        upper_limit[s_names[i]] = round((s_df_iter.iloc[-1]["Avg. Rel. Tx/Ctrl"] + s_df_iter.iloc[-1]["Stdev"])* 1.5)
+        # Determine upper limit on axis of value for iterated "s_df" (1.2 folds of the maximum "Avg. Rel. Tx/Ctrl" value)
+        upper_limit[s_names[i]] = round((s_df_iter.iloc[-1]["Avg. Rel. Tx/Ctrl"] + s_df_iter.iloc[-1]["Stdev"])* 1.2)
 
         # Determine if break is applicable for each target name
         for j in range(len(s_df_iter) - 1):
