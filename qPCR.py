@@ -13,7 +13,7 @@ is returned as output of the function.
 def qPCR_plot(
     file_list, ref_list, ctrl_list, bar_color, 
     ct_repeat, sort_by="alphabet_asc", thold_hbar_ct=30, 
-    title="qPCR", value_label="Avg. Rel. Tx/Ctrl", break_thold=10, 
+    title="qPCR", value_label="Rel. Fold Changes in Gene Acti.", break_thold=10, 
     alpha=0.5, capsize=4, legend_loc="0"):
 
     # ***************************************** #

@@ -46,7 +46,7 @@ def data_proc_plot():
         "params-sample-groups": color_dict,
         "params-total-bars": 30,
         "params-graph-title": "qPCR",
-        "params-axis-label": "Avg. Rel. Tx/Ctrl",
+        "params-axis-label": "Rel. Fold Changes in Gene Acti.",
         "params-break-thold": 10,
         "params-alpha-transparency": 0.5,
         "params-capsize": 4,
