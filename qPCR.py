@@ -248,7 +248,7 @@ def qPCR_plot(
         s_df_iter = s_df[s_names[i]].sort_values(by=["Avg. Rel. Tx/Ctrl"], ascending=True).reset_index(drop=True)
 
         # Determine upper limit on axis of value for iterated "s_df" (1.5 folds of the maximum "Avg. Rel. Tx/Ctrl" value)
-        upper_limit[s_names[i]] = round((s_df_iter.iloc[-1]["Avg. Rel. Tx/Ctrl"] + s_df_iter.iloc[-1]["Stdev"])* 1.2)
+        upper_limit[s_names[i]] = round((s_df_iter.iloc[-1]["Avg. Rel. Tx/Ctrl"] + s_df_iter.iloc[-1]["Stdev"])* 1.5)
 
         # Determine if break is applicable for each target name
         for j in range(len(s_df_iter) - 1):
@@ -276,7 +276,10 @@ def qPCR_plot(
         if bar_break:
 
             # Bar plots
-            fig, (ax1, ax2) = plt.subplots(1, 2, sharey=True, figsize=[total_bars / 7.5, total_bars / 3], dpi=100)
+            if total_bars > 20:
+                fig, (ax1, ax2) = plt.subplots(1, 2, sharey=True, figsize=[total_bars / 7.5, total_bars / 3], dpi=100)
+            else:
+                fig, (ax1, ax2) = plt.subplots(1, 2, sharey=True, dpi=100)
 
             # Counter for offside width for "pos"
             counter = 0
@@ -378,7 +381,10 @@ def qPCR_plot(
         else:
 
             # Bar plots
-            fig, ax = plt.subplots(figsize=[total_bars / 7.5, total_bars / 3], dpi=100)
+            if total_bars > 20:
+                fig, ax = plt.subplots(figsize=[total_bars / 7.5, total_bars / 3], dpi=100)
+            else:
+                fig, ax = plt.subplots(dpi=100)
 
             # Counter for offside width for "pos"
             counter = 0
@@ -445,7 +451,10 @@ def qPCR_plot(
         if bar_break:
 
             # Bar plots
-            fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True, figsize=[total_bars / 3, total_bars / 7.5], dpi=100)
+            if total_bars > 20:
+                fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True, figsize=[total_bars / 3, total_bars / 7.5], dpi=100)
+            else:
+                fig, (ax1, ax2) = plt.subplots(2, 1, sharex=True, dpi=100)
 
             # Counter for offside width for "pos"
             counter = 0
@@ -518,7 +527,8 @@ def qPCR_plot(
 
             # Set ticks and ticklabels on axis of target names
             ax1.tick_params(axis="x", bottom=False)
-            ax2.tick_params(axis="x", labelrotation=30)
+            if total_bars > 15:
+                ax.tick_params(axis="x", labelrotation=30)
             ax2.set_xticks(value_ticks)
             ax2.set_xticklabels(list(s_df["Ctrl"]["Target Name"]))
 
@@ -546,7 +556,10 @@ def qPCR_plot(
         # No break in bar graph
         else:
             # Bar plots
-            fig, ax = plt.subplots(figsize=[total_bars / 3, total_bars / 7.5], dpi=100)
+            if total_bars > 20:
+                fig, ax = plt.subplots(figsize=[total_bars / 3, total_bars / 7.5], dpi=100)
+            else:
+                fig, ax = plt.subplots(dpi=100)
 
             # Counter for offside width for "pos"
             counter = 0
@@ -597,7 +610,9 @@ def qPCR_plot(
             ax.set_ylabel(value_label)
 
             # Set ticks and ticklabels on axis of target names
-            ax.tick_params(axis="x", labelrotation=30)
+            if total_bars > 15:
+                ax.tick_params(axis="x", labelrotation=30)
+
             ax.set_xticks(value_ticks)
             ax.set_xticklabels(list(s_df["Ctrl"]["Target Name"]))
 
