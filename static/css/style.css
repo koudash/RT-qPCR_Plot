@@ -40,7 +40,7 @@ form {
     animation-iteration-count: infinite;        
 }
 
-.btn-plot-text {
+.btn-submit-text {
     will-change: color;
     animation-name: color-ori;
     animation-duration: 11s;
@@ -90,12 +90,13 @@ form {
     animation-iteration-count: infinite;        
 }
 
-.btn-plot {
+.btn-submit {
     will-change: color;
     animation-name: color-inverted;
     animation-duration: 11s;
-    animation-iteration-count: infinite;        
+    animation-iteration-count: infinite;      
 }
+
 
 @keyframes color-inverted {
     0%   {
@@ -134,12 +135,11 @@ form {
 }
 
 /* Color of invalid input text (including placeholder) is set to salmon by default */
-.file-sel {
-    color: salmon;
-}
+.file-sel,
 .file-repeat {
     color: salmon;
 }
+
 .required-form-control::placeholder { /* Chrome, Firefox, Opera, Safari 10.1+ */
     color: salmon;
     opacity: 1; /* Firefox */
@@ -201,7 +201,8 @@ form {
     visibility: visible;
 }
 
-.individual-bar-color {
+.individual-bar-color,
+.params-s-sort-range {
     color: #CCCCCC;
 }
 

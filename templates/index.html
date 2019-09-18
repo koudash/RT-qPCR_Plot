@@ -67,7 +67,7 @@
                         name="file-ref-gene" placeholder="Name of reference gene" required>
                 </div>
                 <div class="form-group col-1">
-                    <label class="mb-2" for="file-repeat">Expt repeat</label>
+                    <label class="mb-2" for="file-repeat">Repeat</label>
                     <select class="form-control required-form-control file-repeat py-1" id="file-repeat" 
                         name="file-repeat" required>
                         <option value="" selected hidden>2 or 3</option>
@@ -78,7 +78,7 @@
             </div>
             <div class="d-flex flex-row-reverse but-bottom pr-2 pb-2">
                 <button type="reset" class="btn btn-outline-secondary font-weight-bold">Reset</button>
-                <button type="button" id="file-add" class="btn btn-outline-success font-weight-bold">Add Data</button>
+                <button type="button" id="file-add" class="btn btn-outline-success font-weight-bold mr-1">Add Data</button>
             </div>
             <div class="form-subheader-2 p-2 my-4">
                 <span class="subheader-text my-0">
@@ -96,24 +96,42 @@
                         min="1" step="1" placeholder="Quantity of sample groups for bar plot">
                 </div>
             </div>
-            <div class="form-row plot-params params-sort px-2">
-                <div class="form-group optional-form-group col-9">
-                    <label for="params-sort">Bar sorting: </label>
+            <div class="form-row plot-params params-t-sort px-2">
+                <div class="form-group optional-form-group col-10">
+                    <label for="params-t-sort">Bar sorting: </label>
                     <br>
                     &emsp;
-                    <input type="radio" id="params-sort" name="params-sort" value="alphabet_asc"> alphabet_asc&emsp;&emsp;
-                    <input type="radio" id="params-sort" name="params-sort" value="alphabet_desc"> alphabet_desc&emsp;&emsp;
-                    <span class="sort-values hidden"><input type="radio" id="params-sort" name="params-sort" value="value_asc">
+                    <input type="radio" id="params-t-sort" name="params-t-sort" value="alphabet_asc"> alphabet_asc&emsp;&emsp;
+                    <input type="radio" id="params-t-sort" name="params-t-sort" value="alphabet_desc"> alphabet_desc&emsp;&emsp;
+                    <span class="sort-values hidden"><input type="radio" id="params-t-sort" name="params-t-sort" value="value_asc">
                          value_asc&emsp;&emsp;</span>
-                    <span class="sort-values hidden"><input type="radio" id="params-sort" name="params-sort" value="value_desc">
+                    <span class="sort-values hidden"><input type="radio" id="params-t-sort" name="params-t-sort" value="value_desc">
                          value_desc</span>
                 </div>
-            </div>   
+            </div>
+            <div class="form-row plot-params params-ctrl-name px-2">
+                <div class="form-group optional-form-group col-10">
+                    <label for="params-ctrl-name">Name of the control group: </label>
+                    <br>
+                    <input type="text" class="form-control col-9" id="params-ctrl-name" name="params-ctrl-name" 
+                    placeholder="Name of the ctrl group to be shown in graph">
+                </div>
+            </div>
+            <div class="form-row plot-params params-s-sort px-2">
+                <div class="form-group optional-form-group col-10">
+                    <label for="params-s-sort-yes">Specific sorting on sample names: </label>
+                    <br>
+                    &emsp;
+                    <input type="checkbox" id="params-s-sort-yes" name="params-s-sort" value="yes">Yes
+                    &emsp;
+                    <input type="checkbox" id="params-s-sort-no" name="params-s-sort" value="no">No
+                </div>
+            </div>
             <div class="form-row plot-params params-total-bars px-2">
-                <div class="form-group optional-form-group col-9">
+                <div class="form-group optional-form-group col-10">
                     <label for="params-total-bars">Total bar thold for h-plot: </label>
                     <br>
-                    <input type="number" class="form-control col-10" id="params-total-bars" name="params-total-bars" 
+                    <input type="number" class="form-control col-9" id="params-total-bars" name="params-total-bars" 
                         min="1" step="1" placeholder="Threshold of bar ct for horizontal plot">
                 </div>
             </div>
@@ -166,9 +184,14 @@
                         min="0" max="10" step="1" placeholder="Location of legend">
                 </div>
             </div>
-            <div class="d-flex flex-row-reverse pr-2 pb-2">
-                <button type="submit" id="form-submit" class="btn btn-plot font-weight-bold">
-                    <span class="btn-plot-text">PLOT</span>
+            <div class="submit d-flex flex-row-reverse pr-2 pb-2">
+                <button type="submit" id="form-submit-plot" class="btn btn-submit font-weight-bold" 
+                    name="form-submit" value="submit-plot">
+                    <span class="btn-submit-text">PLOT</span>
+                </button>
+                <button type="submit" id="form-submit-data" class="btn btn-submit font-weight-bold mr-1" 
+                    name="form-submit" value="submit-data">
+                    <span class="btn-submit-text">PROCESSED DATA</span>
                 </button>
             </div>
         </form>

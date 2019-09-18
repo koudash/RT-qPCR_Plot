@@ -74,13 +74,13 @@ d3.select("#file-add").on("click", function() {
 d3.select("#params-sample-groups").on("change", function() {
 
     // Remove pre-existing selections for bar colors should there be any
-    if (d3.select(".params-bar-colors")) {
+    if (d3.select(".params-bar-colors").node() != null) {
         d3.select(".params-bar-colors").remove();
     }
     
     // Insert 'div' element above "Bar sorting" input box
     let sampleGroupColors = d3.select(".upload")
-        .insert('div', ".params-sort")
+        .insert('div', ".params-t-sort")
         .attr("class", "form-row plot-params params-bar-colors px-2");
 
     // Variable for the text in "No. of sample groups" box
@@ -112,8 +112,77 @@ d3.select("#params-sample-groups").on("change", function() {
 
 });
 
+// Event listener when changing "Sorting sample names"
+d3.select(".params-s-sort").selectAll('input').on("change", function() {    
+    
+    // Variable for the selected checkbox
+    let checkboxSel = d3.select(this).node().value;
+    
+    // Check if "sorting sample names" is selected
+    if (checkboxSel == "yes") {
+
+        // Make sure the opposite checkbox is unchecked
+        d3.select("#params-s-sort-no")
+            .property("checked", false);        
+
+        // Determine element for sample sorting range
+        if (d3.select(".params-s-sort-range").node() === null) {
+            // Insert 'div' element above "Total bar thold for h-plot" input box
+            var sampleSortRange = d3.select(".upload")
+                .insert('div', ".params-total-bars")
+                .attr("class", "form-row plot-params params-s-sort-range px-2")
+                .append('div')
+                .attr("class", "form-group col-10 d-flex");
+        } else {
+            // Variable for element of sample sorting range
+            var sampleSortRange = d3.select(".params-s-sort-range").select('div');
+            // Clear child element(s) of sample sorting range 'div'
+            sampleSortRange.html("");
+        }
+    
+        // Append position range on sample name for sorting
+        sampleSortRange.append('label')
+            .attr("for", "s-sort-start")
+            .attr("class", "px-1 mb-3")
+            .text("Range (couting from 0): ");          
+        sampleSortRange.append('span')
+            .html("&emsp;");            
+        sampleSortRange.append('input')
+            .attr("type", "number")
+            .attr("id", "s-sort-start")
+            .attr("class", "form-control col-2")
+            .attr("name", "s-sort-start")
+            .attr("min", "-10000000")
+            .attr("step", "1")
+            .attr("placeholder", "Starting position on sample name for sorting");
+        sampleSortRange.append('span')
+            .html("&ensp;");         
+        sampleSortRange.append('input')
+            .attr("type", "number")
+            .attr("id", "s-sort-end")
+            .attr("class", "form-control col-2")
+            .attr("name", "s-sort-end")
+            .attr("min", "-10000000")
+            .attr("step", "1")
+            .attr("placeholder", "Ending position on sample name for sorting");                            
+
+    // Not "sorting sample name" is selected
+    } else {
+
+        // Make sure the opposite checkbox is unchecked
+        d3.select("#params-s-sort-yes")
+            .property("checked", false);
+        // Remove element for sample sorting range if exists
+        if (d3.select(".params-s-sort-range").node() != null) {
+            d3.select(".params-s-sort-range").remove();
+        }        
+         
+    }
+
+});
+
 // Make 'img' visible after clicking "PLOT" button
-d3.select("#form-submit").on("click", function() {
+d3.select("#form-submit-plot").on("click", function() {
     d3.select('.bar-graph')
         .attr("class", "bar-graph shown");
 });
@@ -126,9 +195,4 @@ $(".form-subheader-2").click(function() {
     // Toggling between "up" and "down" icons
     // https://stackoverflow.com/questions/3965479/trying-to-toggle-between-two-icons
     $(".fa-angle-double-down").toggleClass("fa-angle-double-up");
-});
-
-// Change color of texts in required input box when filled in
-d3.selectAll(".required-form-control").on("change", function() {
-    this.style.color = "#5CB85C";
 });
