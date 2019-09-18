@@ -112,61 +112,59 @@ d3.select("#params-sample-groups").on("change", function() {
 
 });
 
-// Event listener when changing "Sorting sample names"
+// Event listener when changing "Specific sorting on sample names"
 d3.select(".params-s-sort").selectAll('input').on("change", function() {    
     
     // Variable for the selected checkbox
     let checkboxSel = d3.select(this).node().value;
     
-    // Check if "sorting sample names" is selected
+    // Check if "specific sorting on sample names" is selected
     if (checkboxSel == "yes") {
 
         // Make sure the opposite checkbox is unchecked
         d3.select("#params-s-sort-no")
             .property("checked", false);        
 
-        // Determine element for sample sorting range
+        // Specific sorting on sample names is not pre-checked
         if (d3.select(".params-s-sort-range").node() === null) {
             // Insert 'div' element above "Total bar thold for h-plot" input box
-            var sampleSortRange = d3.select(".upload")
+            let sampleSortRange = d3.select(".upload")
                 .insert('div', ".params-total-bars")
                 .attr("class", "form-row plot-params params-s-sort-range px-2")
                 .append('div')
-                .attr("class", "form-group col-10 d-flex");
+                .attr("class", "form-group col-10 d-flex");                
+            // Append position range on sample name for sorting
+            sampleSortRange.append('label')
+                .attr("for", "s-sort-start")
+                .attr("class", "px-1 mb-3")
+                .text("Range (couting from 0): ");          
+            sampleSortRange.append('span')
+                .html("&emsp;");            
+            sampleSortRange.append('input')
+                .attr("type", "number")
+                .attr("id", "s-sort-start")
+                .attr("class", "form-control col-2")
+                .attr("name", "s-sort-start")
+                .attr("min", "-10000000")
+                .attr("step", "1")
+                .attr("placeholder", "Starting position on sample name for sorting");
+            sampleSortRange.append('span')
+                .html("&ensp;");         
+            sampleSortRange.append('input')
+                .attr("type", "number")
+                .attr("id", "s-sort-end")
+                .attr("class", "form-control col-2")
+                .attr("name", "s-sort-end")
+                .attr("min", "-10000000")
+                .attr("step", "1")
+                .attr("placeholder", "Ending position on sample name for sorting");                            
+        // Specific sorting on sample names is pre-checked
         } else {
-            // Variable for element of sample sorting range
-            var sampleSortRange = d3.select(".params-s-sort-range").select('div');
-            // Clear child element(s) of sample sorting range 'div'
-            sampleSortRange.html("");
+            // Remove element for sample sorting range
+            d3.select(".params-s-sort-range").remove();
         }
     
-        // Append position range on sample name for sorting
-        sampleSortRange.append('label')
-            .attr("for", "s-sort-start")
-            .attr("class", "px-1 mb-3")
-            .text("Range (couting from 0): ");          
-        sampleSortRange.append('span')
-            .html("&emsp;");            
-        sampleSortRange.append('input')
-            .attr("type", "number")
-            .attr("id", "s-sort-start")
-            .attr("class", "form-control col-2")
-            .attr("name", "s-sort-start")
-            .attr("min", "-10000000")
-            .attr("step", "1")
-            .attr("placeholder", "Starting position on sample name for sorting");
-        sampleSortRange.append('span')
-            .html("&ensp;");         
-        sampleSortRange.append('input')
-            .attr("type", "number")
-            .attr("id", "s-sort-end")
-            .attr("class", "form-control col-2")
-            .attr("name", "s-sort-end")
-            .attr("min", "-10000000")
-            .attr("step", "1")
-            .attr("placeholder", "Ending position on sample name for sorting");                            
-
-    // Not "sorting sample name" is selected
+    // Not "specific sorting on sample names" is selected
     } else {
 
         // Make sure the opposite checkbox is unchecked
