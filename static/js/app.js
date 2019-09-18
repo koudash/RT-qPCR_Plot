@@ -194,3 +194,8 @@ $(".form-subheader-2").click(function() {
     // https://stackoverflow.com/questions/3965479/trying-to-toggle-between-two-icons
     $(".fa-angle-double-down").toggleClass("fa-angle-double-up");
 });
+
+// Change color of texts in required input box when filled in
+d3.selectAll(".required-form-control").on("change", function() {
+    this.style.color = "#5CB85C";
+});
