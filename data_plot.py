@@ -99,7 +99,7 @@ def bar_plot(
     # Determine upper limit for all data on axis of value
     ul = max(upper_limit.values())
 
-    # Set upper limit as 1.5 if values from all treatment groups are less than 1 (that from control group)
+    # Set upper limit as 1.5 if values from all treatment groups are no greater than 1 (that from control group)
     if ul == 1:
         ul = 1.5
 
