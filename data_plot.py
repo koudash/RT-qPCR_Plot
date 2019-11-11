@@ -365,7 +365,7 @@ def bar_plot(
             # Set ticks and ticklabels on axis of target names
             ax1.tick_params(axis="x", bottom=False)
             if total_bars > 15:
-                ax.tick_params(axis="x", labelrotation=30)
+                ax2.tick_params(axis="x", labelrotation=30)
             ax2.set_xticks(value_ticks)
             ax2.set_xticklabels(list(s_df[ctrl_name]["Target Name"]))
 
@@ -447,7 +447,7 @@ def bar_plot(
             ax.set_ylabel(value_label)
 
             # Set ticks and ticklabels on axis of target names
-            if total_bars > 315:                                 # <- 15 to 315
+            if total_bars > 15:                                 # <- 15 to 315
                 ax.tick_params(axis="x", labelrotation=30)
 
             ax.set_xticks(value_ticks)
