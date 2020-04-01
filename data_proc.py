@@ -105,7 +105,7 @@ def data_proc(file_list, ref_list, ctrl_list, ct_repeat, ctrl_name="WT"):
 
         # >>>>>>>>>> Column calc in "file_data" for bar plot <<<<<<<<<< #
         # DataFrame to hold columns of iterated ".csv" file for bar plot
-        file_data = pd.DataFrame(columns=["Sample Name", "Target Name", "Concat Name", "Avg. Rel. Tx/Ctrl", "Stdev", "P"])
+        file_data = pd.DataFrame(columns=["Sample Name", "Target Name", "Concat Name", "Avg. Rel. Tx/Ctrl", "Stdev", "P", "P_asterisk"])
 
         # Calculate values in columns of "file_data"
         file_data["Concat Name"] = df.groupby(["Concat Name"])["Rel. Tx/Ctrl"].mean().index
@@ -173,10 +173,12 @@ def data_proc(file_list, ref_list, ctrl_list, ct_repeat, ctrl_name="WT"):
                     elif p < 0.05:
                         asterisk = "*"
                     # Append "asterisk" to designated "P" column of "file_data"
-                    file_data.loc[file_data["Concat Name"] == f'{s}_{t_name}', "P"] = asterisk                
+                    file_data.loc[file_data["Concat Name"] == f'{s}_{t_name}', "P"] = p
+                    file_data.loc[file_data["Concat Name"] == f'{s}_{t_name}', "P_asterisk"] = asterisk                
                 else:
                     # Append "" to "P" column of ctrl_name in "file_data"
                     file_data.loc[file_data["Concat Name"] == f'{s}_{t_name}', "P"] = ""
+                    file_data.loc[file_data["Concat Name"] == f'{s}_{t_name}', "P_asterisk"] = ""
 
         # Drop "Concat Name" column from "file_data"
         file_data = file_data.drop(columns=["Concat Name"])

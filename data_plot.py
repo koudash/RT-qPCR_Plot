@@ -156,7 +156,7 @@ def bar_plot(
                     # Loop through "s_df" of iterated sample name
                     for j in range(len(s_df[s_names[i]])):
                         # Asterisk(s) for "s" parameter of "Axes.text()"
-                        text_s = s_df[s_names[i]]["P"][j]
+                        text_s = s_df[s_names[i]]["P_asterisk"][j]
                         # x-coord for upper cap of iterated error bar
                         text_x = s_df[s_names[i]]["Avg. Rel. Tx/Ctrl"][j] + s_df[s_names[i]]["Stdev"][j]
                         # Check if iterated bar has break and if not ...
@@ -252,7 +252,7 @@ def bar_plot(
                     # Loop through "s_df" of iterated sample name
                     for j in range(len(s_df[s_names[i]])):
                         # Asterisk(s) for "s" parameter of "Axes.text()"
-                        text_s = s_df[s_names[i]]["P"][j]
+                        text_s = s_df[s_names[i]]["P_asterisk"][j]
                         # x-coord for upper cap of iterated error bar
                         text_x = s_df[s_names[i]]["Avg. Rel. Tx/Ctrl"][j] + s_df[s_names[i]]["Stdev"][j]
                         # Add text label to bar in "ax1"
@@ -331,7 +331,7 @@ def bar_plot(
                     for j in range(len(s_df[s_names[i]])):
 
                         # Asterisk(s) for "s" parameter of "Axes.text()"
-                        text_s = s_df[s_names[i]]["P"][j]
+                        text_s = s_df[s_names[i]]["P_asterisk"][j]
                         # x-coord for upper cap of iterated error bar
                         text_y = s_df[s_names[i]]["Avg. Rel. Tx/Ctrl"][j] + s_df[s_names[i]]["Stdev"][j]
                         # Check if iterated bar has break and if not ...
@@ -428,7 +428,7 @@ def bar_plot(
                     for j in range(len(s_df[s_names[i]])):
 
                         # Asterisk(s) for "s" parameter of "Axes.text()"
-                        text_s = s_df[s_names[i]]["P"][j]
+                        text_s = s_df[s_names[i]]["P_asterisk"][j]
                         # x-coord for upper cap of iterated error bar
                         text_y = s_df[s_names[i]]["Avg. Rel. Tx/Ctrl"][j] + s_df[s_names[i]]["Stdev"][j]
                         # Add text label to bar in "ax"
